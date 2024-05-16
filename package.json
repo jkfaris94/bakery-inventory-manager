@@ -1,38 +1,19 @@
 {
   "name": "starter-bakery-inventory-manager",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "npm -prefix front-end run build",
+    "preinstall": "cd ./back-end && npm install",
+    "install": "cd ./front-end && npm install",
+    "start": "npx concurrently 'npm run start:backend' 'npm run start:frontend'",
+    "start:backend": "npm --prefix ./back-end start",
+    "start:frontend": "npm --prefix ./front-end start",
+    "start:dev": "npx concurrently \"npm run start:dev --prefix ./back-end\" \"npm start --prefix ./front-end\" ",
+    "test": "npm test --prefix ./back-end"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
