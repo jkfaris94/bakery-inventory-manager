@@ -8,6 +8,9 @@ There are no user stories for logging: it is expected that you will add logging 
 
 <!-- TOC depthfrom:2 depthto:3 -->
 
+- [Getting started](#getting-started)
+  - [Running your application](#running-your-application)
+  - [Running the tests](#running-the-tests)
 - [Existing files](#existing-files)
   - [The root directory](#the-root-directory)
   - [Backend directory](#backend-directory)
@@ -34,6 +37,27 @@ There are no user stories for logging: it is expected that you will add logging 
 - [Rubric](#rubric)
 
 <!-- /TOC -->
+
+## Getting started
+
+To get started on this project, fork and clone this repository. Keep in mind that you _will not be making a pull request to this repository._
+
+### Running your application
+
+Run the following commands from your command line. Make sure you are in the root directory before running the commands.
+
+```
+npm run backend-install
+npm run frontend-install
+```
+
+To start the project, you have a few different options. View the `package.json` in the root directory to see the scripts available to you.
+
+For development purposes, you will likely want to open up a terminal tab, navigate to the `backend/` directory, and run `npm run dev`. In a different terminal tab you will want to navigate to the `frontend/` directory and run `npm start`.
+
+### Running the tests
+
+To run the tests for the backend, you can use the `npm test` command from the root directory of this project.
 
 ## Existing files
 
