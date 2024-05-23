@@ -32,7 +32,6 @@ describe("API: Ingredients resource", () => {
       const [ingredient] = response.body.data;
       expect(ingredient.id).toBeDefined();
       expect(ingredient.name).toBeDefined();
-      expect(ingredient.unit).toBeDefined();
     });
   });
 
@@ -49,7 +48,6 @@ describe("API: Ingredients resource", () => {
       const ingredient = response.body.data;
       expect(ingredient.id).toBeDefined();
       expect(ingredient.name).toBeDefined();
-      expect(ingredient.unit).toBeDefined();
     });
 
     it("returns a 404 if the ingredient cannot be found by an ID", async () => {
@@ -71,7 +69,6 @@ describe("API: Ingredients resource", () => {
         .send({
           data: {
             name: "Ingredient Name",
-            unit: "cup",
           },
         });
 
@@ -81,7 +78,6 @@ describe("API: Ingredients resource", () => {
       const ingredient = response.body.data;
       expect(ingredient.id).toBeDefined();
       expect(ingredient.name).toBeDefined();
-      expect(ingredient.unit).toBeDefined();
     });
 
     it("returns an error if the `name` is missing", async () => {
@@ -91,21 +87,6 @@ describe("API: Ingredients resource", () => {
         .send({
           data: {
             unit: "cup",
-          },
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.data).not.toBeDefined();
-      expect(response.body.error).toBeDefined();
-    });
-
-    it("returns an error if the `unit` is missing", async () => {
-      const response = await request(app)
-        .post(`/ingredients`)
-        .set("Accept", "application/json")
-        .send({
-          data: {
-            name: "Ingredient Name",
           },
         });
 
@@ -124,7 +105,6 @@ describe("API: Ingredients resource", () => {
         .send({
           data: {
             name: "New Ingredient Name",
-            unit: "teaspoon",
           },
         });
 
@@ -134,7 +114,6 @@ describe("API: Ingredients resource", () => {
       const ingredient = response.body.data;
       expect(ingredient.id).toEqual(existing.id);
       expect(ingredient.name).toEqual("New Ingredient Name");
-      expect(ingredient.unit).toEqual("teaspoon");
     });
 
     it("returns a 404 if the ingredient cannot be found by an ID", async () => {
@@ -168,22 +147,6 @@ describe("API: Ingredients resource", () => {
       expect(response.body.data).not.toBeDefined();
       expect(response.body.error).toBeDefined();
     });
-
-    it("returns an error if the `unit` is missing", async () => {
-      const existing = await db("ingredients").first();
-      const response = await request(app)
-        .put(`/ingredients/${existing.id}`)
-        .set("Accept", "application/json")
-        .send({
-          data: {
-            name: "Ingredient Name",
-          },
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.data).not.toBeDefined();
-      expect(response.body.error).toBeDefined();
-    });
   });
 
   describe("DELETE /ingredients/:ingredientId", () => {
@@ -199,7 +162,6 @@ describe("API: Ingredients resource", () => {
       const ingredient = response.body.data;
       expect(ingredient.id).toBeDefined();
       expect(ingredient.name).toBeDefined();
-      expect(ingredient.unit).toBeDefined();
 
       const matching = await db("ingredients")
         .where({ id: existing.id })

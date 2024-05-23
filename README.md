@@ -147,11 +147,14 @@ While you made include additional fields to this table, you must have the follow
 
 While you made include additional fields to this table, you must have the following fields.
 
-| column name | data type     | description                      |
-| ----------- | ------------- | -------------------------------- |
-| `id`        | `integer`     | A unique ID for each ingredient. |
-| `name`      | `text`        | The name of the ingredient.      |
-| `unit`      | `varchar(10)` | A unit for the ingredient        |
+| column name | data type | description                      |
+| ----------- | --------- | -------------------------------- |
+| `id`        | `integer` | A unique ID for each ingredient. |
+| `name`      | `text`    | The name of the ingredient.      |
+
+#### Additional tables and fields
+
+Keep in mind that, for recipes, you will need to keep track of the units for each recipe (e.g., "1 teaspoon of salt"). You will also need a way to keep track of the overall inventory of all ingredients on hand. Think through your overall database structure before you begin building.
 
 #### Seed data
 
@@ -258,7 +261,7 @@ so that I will be able to use the "Bake" button in the future.
 
 - On the `/recipes/:recipeId` page, there should be some kind of form where an individual can add an ingredient to the displayed recipe.
   - This should include a drop down list from all ingredients within the database.
-  - When an ingredient is selected, an input field should appear that allows the user to enter in an amount for the recipe, using the units specified on the ingredient.
+  - When an ingredient is selected, an input field should appear that allows the user to enter in an amount for the recipe, somehow including the units as well.
 - When the form is submitted, that ingredient should be added to the recipe. The page should update to display the new recipe and should clear the form.
 
 ### US-05 - Remove ingredients from recipe
@@ -270,6 +273,7 @@ so that I can keep my recipe updated with any changes.
 #### Acceptance criteria
 
 - On the `/recipes/:recipeId` page, there should be a button or link that allows for an ingredient to be removed. When that button is clicked, the relationship between the ingredient and the recipe is removed from the database.
+- The page should visually update to show that the ingredient has been removed.
 
 ### US-06 - Delete a recipe
 
