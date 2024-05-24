@@ -368,8 +368,7 @@ so that I can keep the store's offerings current.
 #### Acceptance criteria
 
 - On the `/ingredients/:ingredientId` page, there should be a button that allows for the ingredient to be deleted.
-  - The button should be disabled in the event that any recipe includes this ingredient. A user should not be able to delete an ingredient if it is currently used within a recipe.
-  - Before the ingredient is deleted, a message should appear that asks the user to confirm that they wish to delete the ingredient.
+  - If the ingredient is associated with any recipes, the button should not delete the ingredient but instead show an alert to the user. This alert should state that the user must delete the ingredient from recipes before deleting the ingredient.
 - When the ingredient is deleted, that record should be deleted from the database. If other records depend on the ingredient (e.g., a row within a join table), those records should be deleted as well.
 - When the ingredient is deleted, the user should be brought to the `/ingredients` page.
 
