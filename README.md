@@ -92,8 +92,6 @@ The following files will aid in configuring your backend project:
 
 - The `.env.sample` file includes the environment variables you will need to complete your project. This file should be copied to a `.env` file and then the values should be replaced.
 
-- The `vercel.json` file will help you deploy your application to [Vercel](https://vercel.com/).
-
 - The `knexfile.js` file includes configuration details for your [Knex](http://knexjs.org/) installation. Keep in mind that your connection will only work if you define a `DATABASE_URL` within your `.env` file.
 
 #### `src/` directory
