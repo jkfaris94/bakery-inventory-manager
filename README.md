@@ -42,9 +42,9 @@ There are no user stories for logging: it is expected that you will add logging 
 
 To get started on this project, fork and clone this repository. Keep in mind that you _will not be making a pull request to this repository._
 
-### Running your application
+### Installing and running your application
 
-Run the following commands from your command line. Make sure you are in the root directory before running the commands.
+To install, run the following commands from your command line. Make sure you are in the root directory before running the commands.
 
 ```
 npm run backend-install
@@ -54,6 +54,14 @@ npm run frontend-install
 To start the project, you have a few different options. View the `package.json` in the root directory to see the scripts available to you.
 
 For development purposes, you will likely want to open up a terminal tab, navigate to the `backend/` directory, and run `npm run dev`. In a different terminal tab you will want to navigate to the `frontend/` directory and run `npm start`.
+
+### Database setup
+
+Set up a new PostgreSQL database instance by following the instructions in the "PostgreSQL: Creating & Installing Databases" lesson.
+
+Run `cp ./back-end/.env.sample ./back-end/.env` and update the `./back-end/.env` file with the connection URLs to your PostgreSQL database instance.
+
+Navigate to the `backend` folder, where the `knexfile.js` file is located, and run the `npx knex` commands from there.
 
 ### Running the tests
 
