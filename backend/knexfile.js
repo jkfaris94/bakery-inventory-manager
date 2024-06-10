@@ -17,10 +17,7 @@ module.exports = {
   development: {
     client: "postgresql",
     pool: { min: 1, max: 5 },
-    connection: {
-      connectionString: DATABASE_URL,
-      ssl: true,
-    },
+    connection: DATABASE_URL,
     migrations: {
       directory: path.join(__dirname, "src", "db", "migrations"),
     },
@@ -32,10 +29,7 @@ module.exports = {
   production: {
     client: "postgresql",
     pool: { min: 1, max: 5 },
-    connection: {
-      connectionString: DATABASE_URL,
-      ssl: true,
-    },
+    connection: DATABASE_URL,
     migrations: {
       directory: path.join(__dirname, "src", "db", "migrations"),
     },
@@ -45,11 +39,9 @@ module.exports = {
     debug: !!DEBUG,
   },
   test: {
-    client: "postgresql",
-    pool: { min: 1, max: 5 },
+    client: "sqlite3",
     connection: {
-      connectionString: TEST_DATABASE_URL,
-      ssl: true,
+      filename: ":memory:",
     },
     migrations: {
       directory: path.join(__dirname, "src", "db", "migrations"),
@@ -57,6 +49,6 @@ module.exports = {
     seeds: {
       directory: path.join(__dirname, "src", "db", "seeds"),
     },
-    debug: !!DEBUG,
+    useNullAsDefault: true,
   },
 };

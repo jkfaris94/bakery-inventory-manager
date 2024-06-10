@@ -164,7 +164,43 @@ Keep in mind that, for recipes, you will need to keep track of the units for eac
 
 #### Seed data
 
-Your seed data should include at least 2 recipes. Each recipe should have at least 3 ingredients.
+Your seed data should meet the following requirements:
+
+1. Recipes: Include at least 2 recipes.
+
+2. Ingredients: Each recipe should have at least 3 ingredients.
+
+##### Compatibility Note
+
+The tests utilize an in-memory SQLite database, while the development environment uses a PostgreSQL database. Ensure your seed file can handle both PostgreSQL (development) and SQLite (test) databases. The code should detect the database type and apply the appropriate commands for truncating tables and resetting primary keys.
+
+##### Example Seed File
+
+Below is an example seed file that meets the above requirements and handles both PostgreSQL and SQLite databases:
+
+```js
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.seed = async function (knex) {
+  const isPostgres = knex.client.config.client === 'pg';
+
+  if (isPostgres) {
+    // PostgreSQL specific: TRUNCATE TABLE with RESTART IDENTITY
+    await knex.raw("TRUNCATE TABLE ingredients RESTART IDENTITY CASCADE");
+  } else {
+    // SQLite specific: DELETE all rows and reset the primary key sequence
+    await knex('ingredients').del();
+    await knex.raw('DELETE FROM sqlite_sequence WHERE name = ?', ['ingredients']);
+  }
+
+  // Inserts seed entries
+  await knex('ingredients').insert([
+    { name: "butter", unit: "cup", reserve_amount: 0 },
+  ]);
+};
+```
 
 ### API routes
 
