@@ -42,9 +42,9 @@ There are no user stories for logging: it is expected that you will add logging 
 
 To get started on this project, fork and clone this repository. Keep in mind that you _will not be making a pull request to this repository._
 
-### Running your application
+### Installing and running your application
 
-Run the following commands from your command line. Make sure you are in the root directory before running the commands.
+To install, run the following commands from your command line. Make sure you are in the root directory before running the commands.
 
 ```
 npm run backend-install
@@ -54,6 +54,14 @@ npm run frontend-install
 To start the project, you have a few different options. View the `package.json` in the root directory to see the scripts available to you.
 
 For development purposes, you will likely want to open up a terminal tab, navigate to the `backend/` directory, and run `npm run dev`. In a different terminal tab you will want to navigate to the `frontend/` directory and run `npm start`.
+
+### Database setup
+
+Set up a new PostgreSQL database instance by following the instructions in the "PostgreSQL: Creating & Installing Databases" lesson.
+
+Run `cp ./back-end/.env.sample ./back-end/.env` and update the `./back-end/.env` file with the connection URLs to your PostgreSQL database instance.
+
+Navigate to the `backend` folder, where the `knexfile.js` file is located, and run the `npx knex` commands from there.
 
 ### Running the tests
 
@@ -156,7 +164,43 @@ Keep in mind that, for recipes, you will need to keep track of the units for eac
 
 #### Seed data
 
-Your seed data should include at least 2 recipes. Each recipe should have at least 3 ingredients.
+Your seed data should meet the following requirements:
+
+1. Recipes: Include at least 2 recipes.
+
+2. Ingredients: Each recipe should have at least 3 ingredients.
+
+##### Compatibility Note
+
+The tests utilize an in-memory SQLite database, while the development environment uses a PostgreSQL database. Ensure your seed file can handle both PostgreSQL (development) and SQLite (test) databases. The code should detect the database type and apply the appropriate commands for truncating tables and resetting primary keys.
+
+##### Example Seed File
+
+Below is an example seed file that meets the above requirements and handles both PostgreSQL and SQLite databases:
+
+```js
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.seed = async function (knex) {
+  const isPostgres = knex.client.config.client === 'pg';
+
+  if (isPostgres) {
+    // PostgreSQL specific: TRUNCATE TABLE with RESTART IDENTITY
+    await knex.raw("TRUNCATE TABLE ingredients RESTART IDENTITY CASCADE");
+  } else {
+    // SQLite specific: DELETE all rows and reset the primary key sequence
+    await knex('ingredients').del();
+    await knex.raw('DELETE FROM sqlite_sequence WHERE name = ?', ['ingredients']);
+  }
+
+  // Inserts seed entries
+  await knex('ingredients').insert([
+    { name: "butter", unit: "cup", reserve_amount: 0 },
+  ]);
+};
+```
 
 ### API routes
 
