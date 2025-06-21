@@ -1,0 +1,22 @@
+recipes
+-------
+id (PK)
+title
+image_url
+description
+
+
+ingredients
+-----------
+id (PK)
+name
+unit
+reserve_amount
+
+
+recipe_ingredients
+------------------
+id (PK)
+recipe_id (FK → recipes.id)
+ingredient_id (FK → ingredients.id)
+amount_required
