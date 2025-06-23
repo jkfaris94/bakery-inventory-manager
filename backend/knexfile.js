@@ -1,59 +1,54 @@
-/**
- * Knex configuration file.
- *
- * You will not need to make changes to this file.
- */
-
+// Update with your config settings.
 require("dotenv").config();
-const path = require("path");
 
-const {
-  DATABASE_URL = "postgresql://postgres@localhost/postgres",
-  TEST_DATABASE_URL,
-  DEBUG,
-} = process.env;
-
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
 module.exports = {
+
   development: {
-    client: "postgresql",
-    pool: { min: 1, max: 5 },
+    client: 'sqlite3',
     connection: {
-      connectionString: DATABASE_URL,
+      filename: './dev.sqlite3'
+    },
+   useNullAsDefault: true, // 
+  migrations: {
+    directory: "./src/db/migrations", // 
+  },
+  seeds: {
+    directory: "./src/db/seeds",
+  },
+  },
+  staging: {
+    client: 'postgresql',
+    connection: {
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
     },
     migrations: {
-      directory: path.join(__dirname, "src", "db", "migrations"),
-    },
-    seeds: {
-      directory: path.join(__dirname, "src", "db", "seeds"),
-    },
-    debug: !!DEBUG,
+      tableName: 'knex_migrations'
+    }
   },
+
   production: {
-    client: "postgresql",
-    pool: { min: 1, max: 5 },
+    client: 'postgresql',
     connection: {
-      connectionString: DATABASE_URL,
-      ssl: true,
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
     },
     migrations: {
-      directory: path.join(__dirname, "src", "db", "migrations"),
-    },
-    seeds: {
-      directory: path.join(__dirname, "src", "db", "seeds"),
-    },
-    debug: !!DEBUG,
-  },
-  test: {
-    client: "sqlite3",
-    connection: {
-      filename: ":memory:",
-    },
-    migrations: {
-      directory: path.join(__dirname, "src", "db", "migrations"),
-    },
-    seeds: {
-      directory: path.join(__dirname, "src", "db", "seeds"),
-    },
-    useNullAsDefault: true,
-  },
+      tableName: 'knex_migrations'
+    }
+  }
+
 };
