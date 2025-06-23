@@ -1,0 +1,19 @@
++--------------------------------------------------+
+| Bake a Product                                   |
++--------------------------------------------------+
+
+Select Recipe: [Croissant ▼]
+
+Recipe Summary:
+---------------
+- Flour: 2 kg
+- Butter: 1 kg
+- Milk: 0.5 L
+
+Quantity to Bake: [   10   ] units
+
+[ Bake Now ]  [ Cancel ]
+
+⚠️ Warning: Not enough butter in stock!
+
++--------------------------------------------------+
