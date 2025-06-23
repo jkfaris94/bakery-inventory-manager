@@ -1,0 +1,23 @@
++--------------------------------------------------+
+| Maeve's Fine Baked Goods (Logo / Header)        |
++--------------------------------------------------+
+| [Dashboard] [Inventory] [Recipes] [Bake] [Log Out] |
++--------------------------------------------------+
+
+Inventory Summary:
+-------------------
+- Finished Goods: 12
+- Raw Materials: 9
+- Recipes: 6
+- Low Stock: 2
+
+Quick Actions:
+---------------
+[+ Add Raw Material]
+[+ Add Finished Good]
+[+ Create Recipe]
+[ Bake a Product ]
+
++--------------------------------------------------+
+| Footer © 2025 Maeve’s Fine Baked Goods           |
++--------------------------------------------------+
