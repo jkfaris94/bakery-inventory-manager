@@ -49,4 +49,26 @@ router.delete("/:ingredientId", async (req, res) => {
   }
 });
 
+// GET /recipes/:id/ingredients
+router.get("/", async (req, res) => {
+  const { id: recipe_id } = req.params;
+
+  try {
+    const ingredients = await knex("recipe_ingredients as ri")
+      .join("ingredients as i", "ri.ingredient_id", "i.id")
+      .where("ri.recipe_id", recipe_id)
+      .select(
+        "i.id as ingredient_id",
+        "i.name",
+        "ri.quantity_needed",
+        "ri.unit"
+      );
+
+    res.json(ingredients);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch recipe ingredients" });
+  }
+});
+
 module.exports = router;
