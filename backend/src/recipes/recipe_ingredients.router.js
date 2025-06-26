@@ -27,4 +27,26 @@ router.post("/", async (req, res) => {
   }
 });
 
+// DELETE /recipes/:id/ingredients/:ingredientId
+router.delete("/:ingredientId", async (req, res) => {
+  const { id: recipe_id, ingredientId: ingredient_id } = req.params;
+
+  try {
+    const deleted = await knex("recipe_ingredients")
+      .where({ recipe_id, ingredient_id })
+      .del();
+
+    if (!deleted) {
+      return res
+        .status(404)
+        .json({ error: `Ingredient ${ingredient_id} not found in recipe ${recipe_id}` });
+    }
+
+    res.status(204).end(); // No content
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to remove ingredient from recipe" });
+  }
+});
+
 module.exports = router;
