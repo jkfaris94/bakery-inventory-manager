@@ -11,6 +11,7 @@ const notFound = require("./errors/notFound");
 //import routers
 const ingredientsRouter = require("./ingredients/ingredients.router");
 const bakedGoodsRouter = require("./baked_goods/baked_goods.router");
+const recipesRouter = require("./recipes/recipes.router");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 // Add in your routers here.
 app.use("/ingredients", ingredientsRouter);
 app.use("/baked_goods", bakedGoodsRouter);
+app.use("/recipes", recipesRouter);
 
 app.use(notFound);
 app.use(errorHandler);
