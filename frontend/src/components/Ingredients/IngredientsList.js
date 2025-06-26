@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import IngredientForm from "./IngredientForm";
 import IngredientEditForm from "./IngredientEditForm";
+import { toast } from "react-hot-toast";
 
 function IngredientsList() {
   const [ingredients, setIngredients] = useState([]);
@@ -15,12 +16,14 @@ function IngredientsList() {
       .catch(console.error);
   }, []);
 
-  // Add new ingredient to list
+  // CREATE Add new ingredient to list
   const handleAdd = (newIngredient) => {
     setIngredients([...ingredients, newIngredient]);
+    toast.success("Ingredient added!");
   };
+  
 
-  // Start editing
+  // Click edit
   const handleEditClick = (ingredient) => {
     setEditingId(ingredient.id);
     setEditForm({
@@ -37,30 +40,43 @@ function IngredientsList() {
 
   // Submit edit
   const handleEditSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${editingId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editForm),
+  e.preventDefault();
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${editingId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(editForm),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Update failed");
+      return res.json();
     })
-      .then((res) => res.json())
-      .then((updated) => {
-        setIngredients((prev) =>
-          prev.map((i) => (i.id === updated.id ? updated : i))
-        );
-        setEditingId(null);
-      })
-      .catch(console.error);
-  };
+    .then((updated) => {
+      setIngredients((prev) =>
+        prev.map((i) => (i.id === updated.id ? updated : i))
+      );
+      toast.success("Ingredient updated!");
+      setEditingId(null);
+    })
+    .catch((err) => {
+      console.error(err);
+      toast.error("Failed to update ingredient.");
+    });
+};
 
     // Delete ingredient
-  const handleDelete = (id) => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
-      method: "DELETE",
+const handleDelete = (id) => {
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
+    method: "DELETE",
+  })
+    .then(() => {
+      setIngredients((prev) => prev.filter((i) => i.id !== id));
+      toast("Ingredient deleted.", { icon: "🗑️" });
     })
-      .then(() => setIngredients((prev) => prev.filter((i) => i.id !== id)))
-      .catch(console.error);
-  };
+    .catch((err) => {
+      console.error(err);
+      toast.error("Failed to delete ingredient.");
+    });
+};
 
   return (
     <div>

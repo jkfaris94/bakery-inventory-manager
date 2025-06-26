@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import IngredientsList from "./components/Ingredients/IngredientsList";
 import BakedGoodsList from "./components/BakedGoods/BakedGoodsList";
 import RecipesList from "./components/Recipes/RecipesList";
+import { Toaster } from "react-hot-toast";
 
 
 function Home() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/baked_goods" element={<BakedGoodsList />} />
         <Route path="/recipes" element={<RecipesList />} />
       </Routes>
+      <Toaster position="top-center" />
     </BrowserRouter>
   );
 }
