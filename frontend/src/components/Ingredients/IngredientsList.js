@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import IngredientForm from "./IngredientForm";
 
 function IngredientsList() {
   const [ingredients, setIngredients] = useState([]);
@@ -10,9 +11,14 @@ function IngredientsList() {
       .catch(console.error);
   }, []);
 
+    const handleAdd = (newIngredient) => {
+    setIngredients([...ingredients, newIngredient]);
+  };
+
   return (
     <div>
       <h2>Ingredients</h2>
+      <IngredientForm onAdd={handleAdd} />
       <ul>
         {ingredients.map((ing) => (
           <li key={ing.id}>
