@@ -7,6 +7,10 @@ const cors = require("cors");
 
 const errorHandler = require("./errors/errorHandler");
 const notFound = require("./errors/notFound");
+
+//import routers
+const ingredientsRouter = require("./ingredients/ingredients.router");
+
 const app = express();
 
 if (process.env.LOG_LEVEL === "info") {
@@ -17,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 // Add in your routers here.
+app.use("/ingredients", ingredientsRouter);
 
 app.use(notFound);
 app.use(errorHandler);
