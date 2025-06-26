@@ -1,6 +1,7 @@
 const express = require("express");
 const knex = require("../db/connection");
 const router = express.Router();
+const recipeIngredientsRouter = require("./recipe_ingredients.router"); //import recipe_ingredients.router 
 
 // GET /recipes - list all
 router.get("/", async (req, res) => {
@@ -62,5 +63,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to delete recipe" });
   }
 });
+
+router.use("/:id/ingredients", recipeIngredientsRouter);
 
 module.exports = router;
