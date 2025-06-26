@@ -66,4 +66,67 @@ router.delete("/:id", async (req, res) => {
 
 router.use("/:id/ingredients", recipeIngredientsRouter);
 
+// POST /recipes/:id/bake
+router.post("/:id/bake", async (req, res) => {
+  const { id: recipe_id } = req.params;
+
+  try {
+    // 1. Get recipe
+    const recipe = await knex("recipes").where({ id: recipe_id }).first();
+    if (!recipe) return res.status(404).json({ error: `Recipe ${recipe_id} not found` });
+
+    // 2. Get required ingredients
+    const neededIngredients = await knex("recipe_ingredients as ri")
+      .join("ingredients as i", "ri.ingredient_id", "i.id")
+      .where("ri.recipe_id", recipe_id)
+      .select(
+        "i.id as ingredient_id",
+        "i.name",
+        "i.quantity as available",
+        "ri.quantity_needed"
+      );
+
+    // 3. Check availability
+    const insufficient = neededIngredients.filter(
+      (i) => i.available < i.quantity_needed
+    );
+
+    if (insufficient.length) {
+      return res.status(400).json({
+        error: "Insufficient ingredients",
+        missing: insufficient.map((i) => ({
+          name: i.name,
+          available: i.available,
+          needed: i.quantity_needed,
+        })),
+      });
+    }
+
+    // 4. Start transaction
+    await knex.transaction(async (trx) => {
+      // Subtract ingredients
+      for (const ing of neededIngredients) {
+        await trx("ingredients")
+          .where({ id: ing.ingredient_id })
+          .update({
+            quantity: knex.raw("quantity - ?", [ing.quantity_needed]),
+          });
+      }
+
+      // Increase baked good quantity
+      await trx("baked_goods")
+        .where({ id: recipe.baked_good_id })
+        .update({
+          quantity: knex.raw("quantity + 1"),
+        });
+    });
+
+    res.status(200).json({ message: "Baking complete!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to bake recipe" });
+  }
+});
+
+
 module.exports = router;
