@@ -1,6 +1,6 @@
 function IngredientEditForm({ formData, onChange, onSubmit, onCancel }) {
   return (
-    <form onSubmit={onSubmit} style={{ display: "inline" }}>
+    <form onSubmit={onSubmit} style={{ display: "inline" }} >
       <input
         type="text"
         name="name"
