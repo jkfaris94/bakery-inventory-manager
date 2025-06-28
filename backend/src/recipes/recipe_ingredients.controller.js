@@ -24,18 +24,28 @@ async function list(req, res, next) {
 // POST /recipes/:id/ingredients - Add ingredient to recipe
 async function create(req, res, next) {
   const { id: recipe_id } = req.params;
-  const { ingredient_id, quantity_needed, unit } = req.body;
+  const { ingredient_id, name, quantity_needed, unit } = req.body;
 
-  if (!ingredient_id || !quantity_needed || !unit) {
-    return res.status(400).json({ error: "Missing fields: ingredient_id, quantity_needed, unit" });
+  if ((!ingredient_id && !name) || !quantity_needed || !unit) {
+    return res.status(400).json({
+      error: "Missing fields: must include ingredient_id OR name, plus quantity_needed and unit",
+    });
   }
 
   try {
     const recipe = await knex("recipes").where({ id: recipe_id }).first();
     if (!recipe) return res.status(404).json({ error: "Recipe not found" });
 
+    const insertData = {
+      recipe_id,
+      ingredient_id: ingredient_id || null,
+      name,
+      quantity_needed,
+      unit,
+    };
+
     const [newEntry] = await knex("recipe_ingredients")
-      .insert({ recipe_id, ingredient_id, quantity_needed, unit })
+      .insert(insertData)
       .returning("*");
 
     res.status(201).json(newEntry);
