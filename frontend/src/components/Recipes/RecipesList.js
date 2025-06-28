@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+
+const navigate = useNavigate();
 
 function RecipesList() {
   const [recipes, setRecipes] = useState([]);
@@ -35,7 +38,7 @@ function RecipesList() {
             {r.baked_good_id && <> — Bakes: Good #{r.baked_good_id}</>}
 
             {/* View ingredients - GET /recipes/:id/ingredients */}
-            <button onClick={() => console.log("View", r.id)}>View</button>
+            <button onClick={() => navigate(`/recipes/${r.id}`)}>View</button>
 
             {/* Edit name - future: PUT /recipes/:id */}
             <button onClick={() => console.log("Edit", r.id)}>Edit</button>

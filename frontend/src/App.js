@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import IngredientsList from "./components/Ingredients/IngredientsList";
 import BakedGoodsList from "./components/BakedGoods/BakedGoodsList";
 import RecipesList from "./components/Recipes/RecipesList";
+import RecipeView from "./components/Recipes/RecipeView";
 import { Toaster } from "react-hot-toast";
 
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/ingredients" element={<IngredientsList />} />
         <Route path="/baked_goods" element={<BakedGoodsList />} />
         <Route path="/recipes" element={<RecipesList />} />
+        <Route path="/recipes/:id" element={<RecipeView />} />
       </Routes>
       <Toaster position="top-center" />
     </BrowserRouter>
