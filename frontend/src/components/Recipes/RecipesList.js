@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-const navigate = useNavigate();
-
 function RecipesList() {
+  const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
   // GET /recipes
