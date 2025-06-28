@@ -8,7 +8,7 @@ function IngredientsList() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", quantity: 0, unit: "" });
 
-  // Fetch ingredients on mount
+  // GET /ingredients
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`)
       .then((res) => res.json())
@@ -16,14 +16,14 @@ function IngredientsList() {
       .catch(console.error);
   }, []);
 
-  // CREATE Add new ingredient to list
+  // POST /ingredients
   const handleAdd = (newIngredient) => {
     setIngredients([...ingredients, newIngredient]);
     toast.success("Ingredient added!");
   };
   
 
-  // Click edit
+  // Trigger editing mode for PUT /ingredients/:id
   const handleEditClick = (ingredient) => {
     setEditingId(ingredient.id);
     setEditForm({
@@ -33,12 +33,12 @@ function IngredientsList() {
     });
   };
 
-  // Handle edit input change
+  // Controlled inputs for edit form
   const handleEditChange = ({ target }) => {
     setEditForm({ ...editForm, [target.name]: target.value });
   };
 
-  // Submit edit
+  // PUT /ingredients/:id
   const handleEditSubmit = (e) => {
   e.preventDefault();
   fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${editingId}`, {
@@ -63,7 +63,7 @@ function IngredientsList() {
     });
 };
 
-    // Delete ingredient
+    // DELETE /ingredients/:id
 const handleDelete = (id) => {
   fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
     method: "DELETE",
