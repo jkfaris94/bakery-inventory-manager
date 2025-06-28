@@ -38,7 +38,7 @@ function RecipeView() {
       <ul>
         {ingredients.map((ing) => (
           <li key={ing.ingredient_id}>
-            {ing.name} — {ing.quantity} {ing.unit}
+            {ing.name} — {ing.quantity_needed} {ing.unit}
             <button
               onClick={() => {
                 fetch(
@@ -63,7 +63,11 @@ function RecipeView() {
     {/* Add ingredient form component */}
     <AddRecipeIngredientForm
       recipeId={id}
-      onAdd={(newEntry) => setIngredients([...ingredients, newEntry])}
+       onAdd={() => {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`)
+      .then((res) => res.json())
+      .then(setIngredients);
+  }}
     />
 
     <br />
