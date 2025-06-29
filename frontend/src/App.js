@@ -6,6 +6,7 @@ import RecipeView from "./components/Recipes/RecipeView";
 import IngredientView from "./components/Ingredients/IngredientView";
 import RecipeCreate from "./components/Recipes/RecipesCreate";
 import IngredientCreate from "./components/Ingredients/IngredientCreate";
+import IngredientEdit from "./components/Ingredients/IngredientEdit";
 import { Toaster } from "react-hot-toast";
 
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/recipes/:id" element={<RecipeView />} />
         <Route path="/ingredients/:ingredientId" element={<IngredientView />} />
         <Route path="/ingredients/new" element={<IngredientCreate />} />
+        <Route path="/ingredients/:ingredientId/edit" element={<IngredientEdit />} />
       </Routes>
       <Toaster position="top-center" />
     </BrowserRouter>

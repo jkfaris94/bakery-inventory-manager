@@ -105,7 +105,7 @@ function IngredientView() {
           <p>
             <strong>Quantity:</strong> {ingredient.quantity} {ingredient.unit}
           </p>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
+          <button onClick={() => navigate(`/ingredients/${ingredient.id}/edit`)}>Edit</button>
           <button onClick={handleDelete}>Delete</button>
         </div>
       )}
