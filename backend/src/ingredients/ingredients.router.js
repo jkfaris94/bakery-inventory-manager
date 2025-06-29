@@ -9,5 +9,7 @@ router
   .get("/:id", controller.read)
   .put("/:id", controller.update)
   .delete("/:id", controller.delete);
+router
+  .get("/:id/recipes", controller.listRecipes);
 
 module.exports = router;

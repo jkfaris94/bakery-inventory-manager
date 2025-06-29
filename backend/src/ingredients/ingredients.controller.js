@@ -64,10 +64,28 @@ async function destroy(req, res, next) {
   }
 }
 
+// GET /ingredients/:id/recipes
+async function listRecipes(req, res, next) {
+  const { id: ingredientId } = req.params;
+
+  try {
+    const recipes = await knex("recipe_ingredients as ri")
+      .join("recipes as r", "ri.recipe_id", "r.id")
+      .select("r.id", "r.name")
+      .where("ri.ingredient_id", ingredientId);
+
+    res.json(recipes);
+  } catch (error) {
+    console.error("Error in listRecipes:", error);
+    next(error);
+  }
+}
+
 module.exports = {
   list,
   read,
   create,
   update,
   delete: destroy,
+  listRecipes,
 };
