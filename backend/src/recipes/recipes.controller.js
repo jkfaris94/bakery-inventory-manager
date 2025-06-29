@@ -23,10 +23,10 @@ async function read(req, res, next) {
 
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
-  const { name, baked_good_id } = req.body;
+  const { name, baked_good_id = null } = req.body;
 
-  if (!baked_good_id) {
-    return res.status(400).json({ error: "Missing required field: baked_good_id" });
+  if (!name) {
+    return res.status(400).json({ error: "Missing required field: name" });
   }
 
   try {
