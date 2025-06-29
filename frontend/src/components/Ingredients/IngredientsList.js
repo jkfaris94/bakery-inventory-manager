@@ -84,7 +84,9 @@ const handleDelete = (id) => {
     <div>
       <h2>Ingredients</h2>
 
-      <IngredientForm onAdd={handleAdd} />
+      <button onClick={() => navigate("/ingredients/new")}>
+        Create New Ingredient
+      </button>
 
       <ul>
         {ingredients.map((ing) =>
