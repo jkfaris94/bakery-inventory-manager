@@ -7,10 +7,11 @@ function IngredientView() {
   const navigate = useNavigate();
 
   const [ingredient, setIngredient] = useState(null);
+  const [recipes, setRecipes] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ name: "", quantity: 0, unit: "" });
 
-  // Fetch ingredient
+  // Fetch ingredient and related recipes 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`)
       .then((res) => res.json())
@@ -19,6 +20,11 @@ function IngredientView() {
         setFormData(data);
       })
       .catch(() => toast.error("Failed to load ingredient"));
+
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}/recipes`)
+      .then((res) => res.json())
+      .then(setRecipes)
+      .catch(() => toast.error("Failed to load related recipes"));
   }, [ingredientId]);
 
   // Handle form input changes
@@ -101,6 +107,22 @@ function IngredientView() {
           </p>
           <button onClick={() => setIsEditing(true)}>Edit</button>
           <button onClick={handleDelete}>Delete</button>
+        </div>
+      )}
+
+      {/* Recipes that use this ingredient */}
+      {recipes.length > 0 && (
+        <div>
+          <h4>Used In Recipes</h4>
+          <ul>
+            {recipes.map((r) => (
+              <li key={r.id}>
+                <button onClick={() => navigate(`/recipes/${r.id}`)}>
+                  {r.name || `Recipe ${r.id}`}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
