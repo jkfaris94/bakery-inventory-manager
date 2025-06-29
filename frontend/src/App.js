@@ -25,11 +25,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-         <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/ingredients" element={<IngredientsList />} />
         <Route path="/baked_goods" element={<BakedGoodsList />} />
         <Route path="/recipes" element={<RecipesList />} />
         <Route path="/recipes/:id" element={<RecipeView />} />
+        <Route path="/ingredients/:ingredientId" element={<IngredientView />} />
       </Routes>
       <Toaster position="top-center" />
     </BrowserRouter>
