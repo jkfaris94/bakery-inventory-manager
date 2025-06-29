@@ -51,17 +51,20 @@ function IngredientView() {
 
   // Delete ingredient
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this ingredient?")) {
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`, {
-        method: "DELETE",
+  if (window.confirm("Are you sure you want to delete this ingredient?")) {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((data) => Promise.reject(data));
+        navigate("/ingredients");
+        toast("Ingredient deleted", { icon: "🗑️" });
       })
-        .then(() => {
-          toast("Ingredient deleted", { icon: "🗑️" });
-          navigate("/ingredients");
-        })
-        .catch(() => toast.error("Failed to delete ingredient"));
-    }
-  };
+      .catch((err) => {
+        toast.error(err?.error || "Failed to delete ingredient");
+      });
+  }
+};
 
   if (!ingredient) return <p>Loading...</p>;
 

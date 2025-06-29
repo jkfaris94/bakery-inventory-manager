@@ -14,21 +14,6 @@ function IngredientsList() {
       .catch(console.error);
   }, []);
 
-  // DELETE /ingredients/:id
-  const handleDelete = (id) => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        setIngredients((prev) => prev.filter((i) => i.id !== id));
-        toast("Ingredient deleted.", { icon: "🗑️" });
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Failed to delete ingredient.");
-      });
-  };
-
   return (
     <div>
       <h2>Ingredients</h2>
@@ -43,7 +28,6 @@ function IngredientsList() {
             {ing.name} — {ing.quantity} {ing.unit}
             <button onClick={() => navigate(`/ingredients/${ing.id}`)}>View</button>
             <button onClick={() => navigate(`/ingredients/${ing.id}/edit`)}>Edit</button>
-            <button onClick={() => handleDelete(ing.id)}>Delete</button>
           </li>
         ))}
       </ul>
