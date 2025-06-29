@@ -55,13 +55,18 @@ async function update(req, res, next) {
 
 //DELETE ingredient 
 async function destroy(req, res, next) {
-  try {
-    const deleted = await knex("ingredients").where({ id: req.params.id }).del();
-    if (!deleted) return res.status(404).json({ error: "Ingredient not found" });
-    res.status(204).end();
-  } catch (error) {
-    next(error);
+  const { id } = req.params;
+
+  const usedIn = await knex("recipe_ingredients").where({ ingredient_id: id });
+
+  if (usedIn.length > 0) {
+    return res.status(400).json({
+      error: "You must remove this ingredient from all recipes before deleting it.",
+    });
   }
+
+  await knex("ingredients").where({ id }).del();
+  res.sendStatus(204);
 }
 
 // GET /ingredients/:id/recipes
