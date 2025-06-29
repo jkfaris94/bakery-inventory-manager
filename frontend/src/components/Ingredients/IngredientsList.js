@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import IngredientForm from "./IngredientForm";
 import IngredientEditForm from "./IngredientEditForm";
 import { toast } from "react-hot-toast";
@@ -7,6 +8,7 @@ function IngredientsList() {
   const [ingredients, setIngredients] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", quantity: 0, unit: "" });
+  const navigate = useNavigate();
 
   // GET /ingredients
   useEffect(() => {
@@ -98,6 +100,7 @@ const handleDelete = (id) => {
           ) : (
             <li key={ing.id}>
               {ing.name} — {ing.quantity} {ing.unit}
+              <button onClick={() => navigate(`/ingredients/${ing.id}`)}>View</button>
               <button onClick={() => handleEditClick(ing)}>Edit</button>
               <button onClick={() => handleDelete(ing.id)}>Delete</button>
             </li>
