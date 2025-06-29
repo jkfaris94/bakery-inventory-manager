@@ -30,6 +30,10 @@ function RecipesList() {
     <div>
       <h2>Recipes</h2>
 
+      {/* Create New Recipe Button */}
+      <button onClick={() => navigate("/recipes/new")}>+ Create New Recipe</button>
+
+
       <ul>
         {recipes.map((r) => (
           <li key={r.id}>
