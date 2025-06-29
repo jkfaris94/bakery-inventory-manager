@@ -56,9 +56,11 @@ async function bake(req, res, next) {
   const { id: recipe_id } = req.params;
 
   try {
+    // Check if recipe exists
     const recipe = await knex("recipes").where({ id: recipe_id }).first();
     if (!recipe) return res.status(404).json({ error: "Recipe not found" });
 
+    // Join to get ingredient quantities needed and currently available
     const neededIngredients = await knex("recipe_ingredients as ri")
       .join("ingredients as i", "ri.ingredient_id", "i.id")
       .where("ri.recipe_id", recipe_id)
@@ -69,6 +71,7 @@ async function bake(req, res, next) {
         "ri.quantity_needed"
       );
 
+    // Check for any insufficient ingredients
     const insufficient = neededIngredients.filter(
       (i) => i.available < i.quantity_needed
     );
@@ -84,27 +87,29 @@ async function bake(req, res, next) {
       });
     }
 
-    await knex.transaction(async (trx) => {
+    // Atomically subtract ingredients and increment baked_goods in a single transaction
+    const updatedGood = await knex.transaction(async (trx) => {
       for (const ing of neededIngredients) {
         await trx("ingredients")
           .where({ id: ing.ingredient_id })
-          .update({
-            quantity: knex.raw("quantity - ?", [ing.quantity_needed]),
-          });
+          .decrement("quantity", ing.quantity_needed);
       }
 
       await trx("baked_goods")
         .where({ id: recipe.baked_good_id })
-        .update({
-          quantity: knex.raw("quantity + 1"),
-        });
+        .increment("quantity", 1);
+
+      return trx("baked_goods")
+        .where({ id: recipe.baked_good_id })
+        .first();
     });
 
-    res.status(200).json({ message: "Baking complete!" });
+    res.status(200).json({ message: "Baking complete!", baked_good: updatedGood });
   } catch (error) {
     next(error);
   }
 }
+
 
 module.exports = {
   list,
