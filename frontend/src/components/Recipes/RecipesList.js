@@ -27,26 +27,36 @@ function RecipesList() {
   };
 
   return (
-    <div>
+     <div>
       <h2>Recipes</h2>
 
       {/* Create New Recipe Button */}
       <button onClick={() => navigate("/recipes/new")}>+ Create New Recipe</button>
 
-
       <ul>
         {recipes.map((r) => (
-          <li key={r.id}>
-            <strong>{r.name || `Recipe ${r.id}`}</strong>
-            {r.baked_good_id && <> — Bakes: Good #{r.baked_good_id}</>}
+          <li key={r.id} className="recipe-item">
+            <div className="recipe-header">
+              <strong>{r.name || `Recipe ${r.id}`}</strong>
+              {/* Show image_url instead of baked_good_id */}
+              {r.image_url ? (
+                <img
+                  src={r.image_url}
+                  alt={r.name}
+                  style={{ width: 120, height: 80, objectFit: 'cover', marginLeft: 8 }}
+                />
+              ) : (
+                <span className="no-image" style={{ marginLeft: 8 }}>No image</span>
+              )}
+            </div>
 
-            {/* View ingredients - GET /recipes/:id/ingredients */}
+            {/* View ingredients */}
             <button onClick={() => navigate(`/recipes/${r.id}`)}>View</button>
 
             {/* Edit name - future: PUT /recipes/:id */}
             <button onClick={() => console.log("Edit", r.id)}>Edit</button>
 
-            {/* Delete - DELETE /recipes/:id */}
+            {/* Delete */}
             <button onClick={() => handleDelete(r.id)}>Delete</button>
           </li>
         ))}
