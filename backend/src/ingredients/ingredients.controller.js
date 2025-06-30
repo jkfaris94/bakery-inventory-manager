@@ -29,11 +29,30 @@ async function create(req, res, next) {
     }
 
     try {
-        const [newIngredient] = await knex("ingredients").insert({ name, quantity, unit }).returning("*");
-        res.status(201).json(newIngredient);
-    } catch (error) {
-        next(error);
+    // 1) Check for an existing ingredient (case-insensitive)
+    const existing = await knex("ingredients")
+      .whereRaw("LOWER(name) = ?", name.trim().toLowerCase())
+      .first();
+
+    if (existing) {
+      return res
+        .status(409)
+        .json({
+          error:
+            "Ingredient already exists. To make changes, please edit the ingredient.",
+          existing_id: existing.ingredient_id,
+        });
     }
+
+    // 2) If not, insert the new one
+    const [newIngredient] = await knex("ingredients")
+      .insert({ name: name.trim(), quantity, unit })
+      .returning("*");
+
+    res.status(201).json(newIngredient);
+  } catch (error) {
+    next(error);
+  }
 }
 
 //PUT update ingredients 
