@@ -34,17 +34,30 @@ function RecipeCreate() {
   return (
     <div>
       <h2>Create New Recipe</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Recipe Name:
+      <form onSubmit={handleSubmit} className="recipe-form">
+        <div className="form-group">
+          <label htmlFor="name">Recipe Name:</label>
           <input
+            id="name"
             type="text"
             name="name"
             required
             value={formData.name}
             onChange={handleChange}
           />
-        </label>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="image_url">Image URL:</label>
+          <input
+            id="image_url"
+            type="url"
+            name="image_url"
+            placeholder="https://example.com/image.jpg"
+            value={formData.image_url}
+            onChange={handleChange}
+          />
+        </div>
 
         <button type="submit">Create</button>
       </form>
