@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 function RecipeCreate() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "", baked_good_id: "" });
+  const [formData, setFormData] = useState({ name: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -43,17 +43,6 @@ function RecipeCreate() {
             required
             value={formData.name}
             onChange={handleChange}
-          />
-        </label>
-
-        <label>
-          Baked Good ID:
-          <input
-            type="number"
-            name="baked_good_id"
-            value={formData.baked_good_id}
-            onChange={handleChange}
-            placeholder="Optional"
           />
         </label>
 
