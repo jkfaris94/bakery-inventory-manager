@@ -23,15 +23,21 @@ async function read(req, res, next) {
 
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
-  const { name, baked_good_id = null } = req.body;
+  const { name } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "Missing required field: name" });
   }
 
+    // Check if name already exists
+  const existing = await knex("recipes").where({ name }).first();
+  if (existing) {
+    return res.status(409).json({ error: "Recipe name already taken" });
+  }
+
   try {
     const [newRecipe] = await knex("recipes")
-      .insert({ name, baked_good_id })
+      .insert({ name, baked_good_id: null })
       .returning("*");
 
     res.status(201).json(newRecipe);
