@@ -46,7 +46,7 @@ function RecipesList() {
                   style={{ width: 120, height: 80, objectFit: 'cover', marginLeft: 8 }}
                 />
               ) : (
-                <span className="no-image" style={{ marginLeft: 8 }}>No image</span>
+                <span className="no-image" style={{ marginLeft: 8 }}>No image yet</span>
               )}
             </div>
 

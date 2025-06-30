@@ -78,7 +78,19 @@ function RecipeView() {
   return (
     <div>
       <h2>{recipeTitle}</h2>
-      <button onClick={handleBake}>Bake {recipeTitle}</button>
+
+      {/* Image URL beneath the title */}
+      {recipe.image_url ? (
+        <img
+          src={recipe.image_url}
+          alt={recipe.name}
+          style={{ width: 200, height: 120, objectFit: 'cover', margin: '12px 0' }}
+        />
+      ) : (
+        <p>No image yet</p>
+      )}
+
+      <button onClick={handleBake}>Bake "{recipeTitle}"</button>
 
       <h4>Ingredients</h4>
       {ingredients.length === 0 ? (
