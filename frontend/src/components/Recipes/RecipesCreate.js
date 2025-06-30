@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 function RecipeCreate() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "" });
+  const [formData, setFormData] = useState({ name: "", image_url: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
