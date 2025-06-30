@@ -31,6 +31,7 @@ function RecipeView() {
       })
       .then((data) => {
         toast.success(data.message || "Baking complete!");
+        navigate("/baked_goods");
       })
       .catch((error) => {
         if (error?.missing) {

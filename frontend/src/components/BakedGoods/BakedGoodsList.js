@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import BakedGoodForm from "./BakedGoodForm";
 import BakedGoodEditForm from "./BakedGoodEditForm";
@@ -8,6 +9,7 @@ function BakedGoodsList() {
   const [goods, setGoods] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", quantity: 0 });
+  const location = useLocation();
 
   // GET /baked_goods
   useEffect(() => {
@@ -15,7 +17,7 @@ function BakedGoodsList() {
       .then((res) => res.json())
       .then(setGoods)
       .catch(console.error);
-  }, []);
+  }, [location]);
 
     // POST /baked_goods
   const handleAdd = (newGood) => {
