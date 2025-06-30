@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import BakedGoodForm from "./BakedGoodForm";
 import BakedGoodEditForm from "./BakedGoodEditForm";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -57,13 +56,6 @@ export default function BakedGoodsList() {
       });
   };
 
-  // POST /baked_goods (manual add) (delete if no longer needed)
-  // const handleAdd = (newGood) => {
-  //   setGoods([...goods, newGood]);
-  //   toast.success(`Baked good "${newGood.name}" added!`);
-  // };
-
-  // DELETE /baked_goods/:id
   const handleDelete = (id) => {
     fetch(`${API_BASE}/baked_goods/${id}`, { method: "DELETE" })
       .then(() => {
