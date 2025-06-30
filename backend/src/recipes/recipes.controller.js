@@ -36,13 +36,23 @@ async function create(req, res, next) {
   }
 
   try {
-    const [newRecipe] = await knex("recipes")
-      .insert({ name, baked_good_id: null })
-      .returning("*");
+    const newRecipe = await knex.transaction(async (trx) => {
+      // Create a baked_good
+      const [bg] = await trx("baked_goods")
+        .insert({ name, quantity: 0 })
+        .returning("*");
+
+      // Create the recipe linked to that baked_good
+      const [recipe] = await trx("recipes")
+        .insert({ name, baked_good_id: bg.id })
+        .returning("*");
+
+      return recipe;
+    });
 
     res.status(201).json(newRecipe);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 }
 
@@ -62,11 +72,15 @@ async function bake(req, res, next) {
   const { id: recipe_id } = req.params;
 
   try {
-    // Check if recipe exists
-    const recipe = await knex("recipes").where({ id: recipe_id }).first();
-    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+    // 1. Fetch recipe
+    const recipe = await knex("recipes")
+      .where({ id: recipe_id })
+      .first();
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
 
-    // Join to get ingredient quantities needed and currently available
+    // 2. Get needed ingredients
     const neededIngredients = await knex("recipe_ingredients as ri")
       .join("ingredients as i", "ri.ingredient_id", "i.id")
       .where("ri.recipe_id", recipe_id)
@@ -77,11 +91,10 @@ async function bake(req, res, next) {
         "ri.quantity_needed"
       );
 
-    // Check for any insufficient ingredients
+    // 3. Check sufficiency
     const insufficient = neededIngredients.filter(
       (i) => i.available < i.quantity_needed
     );
-
     if (insufficient.length) {
       return res.status(400).json({
         error: "Insufficient ingredients",
@@ -93,7 +106,7 @@ async function bake(req, res, next) {
       });
     }
 
-    // Atomically subtract ingredients and increment baked_goods in a single transaction
+    // 4. Decrement ingredients & increment baked_good
     const updatedGood = await knex.transaction(async (trx) => {
       for (const ing of neededIngredients) {
         await trx("ingredients")
@@ -110,12 +123,12 @@ async function bake(req, res, next) {
         .first();
     });
 
+    // 5. Return success
     res.status(200).json({ message: "Baking complete!", baked_good: updatedGood });
   } catch (error) {
     next(error);
   }
 }
-
 
 module.exports = {
   list,
