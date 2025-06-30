@@ -7,18 +7,37 @@ function RecipeView() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [recipeName, setRecipeName] = useState("");
+  const [recipe, setRecipe] = useState(null);
   const [ingredients, setIngredients] = useState([]);
 
-  // Fetch recipe ingredients and recipe name
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRecipeName(data[0]?.recipe_name || `Recipe ${id}`);
-        setIngredients(data);
-      });
+  // Fetch recipe and ingredients
+    useEffect(() => {
+    async function load() {
+      try {
+        // fetch recipe 
+        const recipeRes = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`
+        );
+        if (!recipeRes.ok) throw new Error("Could not load recipe");
+        const recipeData = await recipeRes.json();
+        setRecipe(recipeData);
+
+        // fetch ingredients
+        const ingrRes = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
+        );
+        if (!ingrRes.ok) throw new Error("Could not load ingredients");
+        const ingrData = await ingrRes.json();
+        setIngredients(ingrData);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load recipe");
+      }
+    }
+    load();
   }, [id]);
+
+  const recipeTitle = recipe?.name ?? `Recipe ${id}`;
 
   // Bake the recipe
   const handleBake = () => {
@@ -54,10 +73,12 @@ function RecipeView() {
       .catch(console.error);
   };
 
+  if (!recipe) return <p>Loading…</p>;
+
   return (
     <div>
-      <h2>{recipeName}</h2>
-      <button onClick={handleBake}>Bake {recipeName}</button>
+      <h2>{recipeTitle}</h2>
+      <button onClick={handleBake}>Bake {recipeTitle}</button>
 
       <h4>Ingredients</h4>
       {ingredients.length === 0 ? (
