@@ -57,11 +57,11 @@ export default function BakedGoodsList() {
       });
   };
 
-  // POST /baked_goods (manual add)
-  const handleAdd = (newGood) => {
-    setGoods([...goods, newGood]);
-    toast.success(`Baked good "${newGood.name}" added!`);
-  };
+  // POST /baked_goods (manual add) (delete if no longer needed)
+  // const handleAdd = (newGood) => {
+  //   setGoods([...goods, newGood]);
+  //   toast.success(`Baked good "${newGood.name}" added!`);
+  // };
 
   // DELETE /baked_goods/:id
   const handleDelete = (id) => {
