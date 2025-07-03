@@ -7,7 +7,7 @@ function Layout() {
     <>
       <Header />
       
-      <main style={{ padding: "2rem 1rem" }}>
+      <main className="container py-4">
         <Outlet />
       </main>
       <Footer />

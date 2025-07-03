@@ -20,6 +20,18 @@ body {
   line-height: 1.5;
 }
 
+main {
+    margin: 0 auto;  
+    text-align: center;
+}
+
+main ul,
+main ol {
+  display: inline-block;    /* shrink‐wrap to their content */  
+  margin: 1rem auto;        /* center the list block horizontally */
+   text-align: left;
+}
+
 a {
   color: var(--primary-color);
   text-decoration: none;
@@ -59,7 +71,7 @@ header a, footer a {
 }
 
 /* ================= Forms ================= */
-.recipe-form,
+/* .recipe-form,
 .ingredient-form {
   display: flex;
   flex-direction: column;
@@ -92,7 +104,7 @@ button {
   cursor: pointer;
   border-radius: 4px;
   font-size: 1rem;
-}
+} */
 
 button:hover {
   background: var(--primary-color);
@@ -100,7 +112,7 @@ button:hover {
 }
 
 /* ================= Lists & Cards ================= */
-.list {
+/* .list {
   list-style: none;
   margin-top: var(--spacing);
 }
@@ -108,4 +120,4 @@ button:hover {
 .list-item {
   padding: var(--spacing);
   border-bottom: 1px solid #ddd;
-}
+} */
