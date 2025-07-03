@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Layout from "./components/shared/Layout";
 import IngredientsList from "./components/Ingredients/IngredientsList";
 import BakedGoodsList from "./components/BakedGoods/BakedGoodsList";
 import RecipesList from "./components/Recipes/RecipesList";
@@ -29,20 +30,25 @@ function Home() {
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Layout />}>
+          {/* <Route index element={<Home />} /> */}
+          
+          <Route path="ingredients">
+            <Route index element={<IngredientsList />} />
+            <Route path="new" element={<IngredientCreate />} />
+            <Route path=":ingredientId" element={<IngredientView />} />
+            <Route path=":ingredientId/edit" element={<IngredientEdit />} />
+          </Route>
 
-        <Route path="/ingredients" element={<IngredientsList />} />
-        <Route path="/ingredients/new" element={<IngredientCreate />} />
-        <Route path="/ingredients/:ingredientId" element={<IngredientView />} />
-        <Route path="/ingredients/:ingredientId/edit" element={<IngredientEdit />} />
+          <Route path="recipes">
+            <Route index element={<RecipesList />} />
+            <Route path="new" element={<RecipeCreate />} />
+            <Route path=":id" element={<RecipeView />} />
+          </Route>
 
-        <Route path="/recipes" element={<RecipesList />} />
-        <Route path="/recipes/new" element={<RecipeCreate />} />
-        <Route path="/recipes/:id" element={<RecipeView />} />
-
-        <Route path="/baked_goods" element={<BakedGoodsList />} />
+          <Route path="baked_goods" element={<BakedGoodsList />} />
+        </Route>
       </Routes>
       <Toaster position="top-center" />
     </BrowserRouter>
