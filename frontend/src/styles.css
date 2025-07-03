@@ -1,0 +1,111 @@
+/* ================= Global Resets & Variables ================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary-color: #6b4f4f;
+  --secondary-color: #f5e1da;
+  --text-color: #333;
+  --spacing: 1rem;
+  --max-width: 800px;
+  --font-family: Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* ================= Layout Helpers ================= */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing);
+}
+
+.center {
+  text-align: center;
+}
+
+/* ================= Header & Footer ================= */
+header, footer {
+  background: var(--primary-color);
+  color: white;
+  padding: var(--spacing);
+  text-align: center;
+}
+
+header a, footer a {
+  color: white;
+  margin-right: 1em;
+}
+
+/* ================= Page Sections ================= */
+.home-hero {
+  padding: 2rem 0;
+}
+
+.home-hero h1 {
+  margin-bottom: 0.5rem;
+}
+
+/* ================= Forms ================= */
+.recipe-form,
+.ingredient-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+  max-width: 400px;
+  margin-top: var(--spacing);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+button:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* ================= Lists & Cards ================= */
+.list {
+  list-style: none;
+  margin-top: var(--spacing);
+}
+
+.list-item {
+  padding: var(--spacing);
+  border-bottom: 1px solid #ddd;
+}
