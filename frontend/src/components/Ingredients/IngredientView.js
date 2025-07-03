@@ -69,59 +69,112 @@ function IngredientView() {
   if (!ingredient) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h2>Ingredient Details</h2>
+    <div className="container py-4">
+      <h2 className="mb-4 text-center">Ingredient Details</h2>
 
       {isEditing ? (
-        <form onSubmit={handleUpdate}>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="unit"
-            value={formData.unit}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => setIsEditing(false)}>
-            Cancel
-          </button>
+        <form onSubmit={handleUpdate} className="row g-3">
+          <div className="col-md-4">
+            <label htmlFor="name" className="form-label">
+              Name:
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="col-md-4">
+            <label htmlFor="quantity" className="form-label">
+              Quantity:
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="col-md-4">
+            <label htmlFor="unit" className="form-label">
+              Unit:
+            </label>
+            <input
+              type="text"
+              id="unit"
+              name="unit"
+              value={formData.unit}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="col-12 text-center mt-3">
+            <button type="submit" className="btn btn-success me-2">
+              Save
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="btn btn-secondary"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       ) : (
-        <div>
-          <p>
-            <strong>Name:</strong> {ingredient.name}
-          </p>
-          <p>
-            <strong>Quantity:</strong> {ingredient.quantity} {ingredient.unit}
-          </p>
-          <button onClick={() => navigate(`/ingredients/${ingredient.id}/edit`)}>Edit</button>
-          <button onClick={handleDelete}>Delete</button>
+        <div className="mb-4">
+          <dl className="d-flex flex-column align-items-center mb-4">
+            <div className="d-flex align-items-center mb-2">
+              <dt className="me-2 fw-bold">Name:</dt>
+              <dd className="mb-0">{ingredient.name}</dd>
+            </div>
+            <div className="d-flex align-items-center">
+              <dt className="me-2 fw-bold">Quantity:</dt>
+              <dd className="mb-0">
+                {ingredient.quantity} {ingredient.unit}
+              </dd>
+            </div>
+          </dl>
+          <div className="text-center">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="btn btn-primary me-2"
+            >
+              Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Recipes that use this ingredient */}
       {recipes.length > 0 && (
-        <div>
-          <h4>Used In Recipes</h4>
-          <ul>
+        <div className="mt-4">
+          <h4 className="text-center">Used In Recipes</h4>
+          <ul className="list-group">
             {recipes.map((r) => (
-              <li key={r.id}>
-                <button onClick={() => navigate(`/recipes/${r.id}`)}>
-                  {r.name || `Recipe ${r.id}`}
+              <li
+                key={r.id}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
+                {r.name || `Recipe ${r.id}`}
+                <button
+                  onClick={() => navigate(`/recipes/${r.id}`)}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  View
                 </button>
               </li>
             ))}
@@ -129,8 +182,14 @@ function IngredientView() {
         </div>
       )}
 
-      <br />
-      <button onClick={() => navigate("/ingredients")}>Back to List</button>
+      <div className="text-center mt-4">
+        <button
+          onClick={() => navigate("/ingredients")}
+          className="btn btn-secondary"
+        >
+          Back to Ingredients
+        </button>
+      </div>
     </div>
   );
 }
