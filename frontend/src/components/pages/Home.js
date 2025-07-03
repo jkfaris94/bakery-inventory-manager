@@ -2,14 +2,20 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <div style={{ textAlign: "center", padding: "2rem" }}>
-      <h1>Maeve’s Fine Baked Goods</h1>
-      <p>Welcome to the inventory manager!</p>
-      <nav style={{ marginTop: "2rem" }}>
-        <Link to="/ingredients" style={{ margin: "1rem" }}>Ingredients</Link>
-        <Link to="/baked_goods" style={{ margin: "1rem" }}>Baked Goods</Link>
-        <Link to="/recipes" style={{ margin: "1rem" }}>Recipes</Link>
-      </nav>
+    <div className="container text-center py-5">
+      <h1 className="display-4">Maeve’s Fine Baked Goods</h1>
+      <p className="lead mt-3">Welcome to the inventory manager!</p>
+      <div className="mt-4">
+        <Link to="/ingredients" className="btn btn-primary mx-2">
+          Ingredients
+        </Link>
+        <Link to="/baked_goods" className="btn btn-primary mx-2">
+          Baked Goods
+        </Link>
+        <Link to="/recipes" className="btn btn-primary mx-2">
+          Recipes
+        </Link>
+      </div>
     </div>
   );
 }
