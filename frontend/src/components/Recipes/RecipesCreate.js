@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-function RecipeCreate() {
+export default function RecipeCreate() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: "", image_url: "" });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((fd) => ({ ...fd, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -32,37 +33,43 @@ function RecipeCreate() {
   };
 
   return (
-    <div>
-      <h2>Create New Recipe</h2>
-      <form onSubmit={handleSubmit} className="recipe-form">
-        <div className="form-group">
-          <label htmlFor="name">Recipe Name:</label>
+    <div className="container py-4">
+      <h2 className="text-center mb-4">Create New Recipe</h2>
+      <form onSubmit={handleSubmit} className="row g-3">
+        <div className="col-md-6">
+          <label htmlFor="name" className="form-label">Recipe Name</label>
           <input
             id="name"
-            type="text"
             name="name"
+            type="text"
+            className="form-control"
             required
             value={formData.name}
             onChange={handleChange}
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="image_url">Image URL:</label>
+        <div className="col-md-6">
+          <label htmlFor="image_url" className="form-label">Image URL</label>
           <input
             id="image_url"
-            type="url"
             name="image_url"
+            type="url"
+            className="form-control"
             placeholder="https://example.com/image.jpg"
             value={formData.image_url}
             onChange={handleChange}
           />
         </div>
 
-        <button type="submit">Create</button>
+        <div className="col-12 text-center mt-3">
+          <button type="submit" className="btn btn-success me-2">Create</button>
+          <button type="button" onClick={() => navigate(-1)} className="btn btn-secondary">
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
 }
 
-export default RecipeCreate;
