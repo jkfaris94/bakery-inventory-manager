@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import AddRecipeIngredientForm from "./AddRecipeIngredientForm";
 import { toast } from "react-hot-toast";
 
-function RecipeView() {
+export default function RecipeView() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -11,10 +11,9 @@ function RecipeView() {
   const [ingredients, setIngredients] = useState([]);
 
   // Fetch recipe and ingredients
-    useEffect(() => {
+  useEffect(() => {
     async function load() {
       try {
-        // fetch recipe 
         const recipeRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`
         );
@@ -22,7 +21,6 @@ function RecipeView() {
         const recipeData = await recipeRes.json();
         setRecipe(recipeData);
 
-        // fetch ingredients
         const ingrRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
         );
@@ -64,11 +62,14 @@ function RecipeView() {
 
   // Remove ingredient from recipe
   const handleRemove = (ingredientId) => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients/${ingredientId}`, {
-      method: "DELETE",
-    })
+    fetch(
+      `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients/${ingredientId}`,
+      { method: "DELETE" }
+    )
       .then(() => {
-        setIngredients((prev) => prev.filter((i) => i.ingredient_id !== ingredientId));
+        setIngredients((prev) =>
+          prev.filter((i) => i.ingredient_id !== ingredientId)
+        );
       })
       .catch(console.error);
   };
@@ -76,49 +77,81 @@ function RecipeView() {
   if (!recipe) return <p>Loading…</p>;
 
   return (
-    <div>
-      <h2>{recipeTitle}</h2>
+    <div className="container py-4">
+      <h2 className="text-center mb-3">{recipeTitle}</h2>
+      <div className="row justify-content-center mb-4">
+        <div className="col-md-6">
+          {recipe.image_url ? (
+            <img
+              src={recipe.image_url}
+              alt={recipe.name}
+              className="img-fluid rounded mx-auto d-block mb-3"
+              style={{ maxHeight: "150px", objectFit: "cover" }}
+            />
+          ) : (
+            <div
+              className="bg-light d-flex align-items-center justify-content-center mb-3"
+              style={{ height: "150px" }}
+            >
+              <span className="text-muted">No image available</span>
+            </div>
+          )}
+          <div className="text-center mb-3">
+            <button className="btn btn-success btn-sm me-2" onClick={handleBake}>
+              Bake "{recipeTitle}"
+            </button>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
 
-      {/* Image URL beneath the title */}
-      {recipe.image_url ? (
-        <img
-          src={recipe.image_url}
-          alt={recipe.name}
-          style={{ width: 200, height: 120, objectFit: 'cover', margin: '12px 0' }}
-        />
-      ) : (
-        <p>No image yet</p>
-      )}
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h4 className="mb-3 text-center">Ingredients</h4>
+          {ingredients.length === 0 ? (
+            <p className="text-center">No ingredients yet.</p>
+          ) : (
+            <ul className="list-group mb-4">
+              {ingredients.map((ing) => (
+                <li
+                  key={ing.ingredient_id}
+                  className="list-group-item d-flex justify-content-between align-items-center py-2"
+                >
+                  <span>
+                    {ing.name} — {ing.quantity_needed} {ing.unit}
+                  </span>
+                  <button
+                    className="btn btn-outline-danger btn-sm"
+                    onClick={() => handleRemove(ing.ingredient_id)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
-      <button onClick={handleBake}>Bake "{recipeTitle}"</button>
-
-      <h4>Ingredients</h4>
-      {ingredients.length === 0 ? (
-        <p>No ingredients yet.</p>
-      ) : (
-        <ul>
-          {ingredients.map((ing) => (
-            <li key={ing.ingredient_id}>
-              {ing.name} — {ing.quantity_needed} {ing.unit}
-              <button onClick={() => handleRemove(ing.ingredient_id)}>Remove</button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <AddRecipeIngredientForm
-        recipeId={id}
-        onAdd={() => {
-          fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`)
-            .then((res) => res.json())
-            .then(setIngredients);
-        }}
-      />
-
-      <br />
-      <button onClick={() => navigate(-1)}>Back</button>
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <AddRecipeIngredientForm
+            recipeId={id}
+            onAdd={() => {
+              fetch(
+                `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
+              )
+                .then((res) => res.json())
+                .then(setIngredients);
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
-
-export default RecipeView;
