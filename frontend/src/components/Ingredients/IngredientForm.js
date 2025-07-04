@@ -1,86 +1,90 @@
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
-function IngredientForm({ onAdd }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    quantity: 0,
-    unit: "",
-  });
+export default function IngredientForm({ onAdd }) {
+  const [formData, setFormData] = useState({ name: "", quantity: "", unit: "" });
 
-  const handleChange = ({ target }) => {
-    setFormData({ ...formData, [target.name]: target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((fd) => ({ ...fd, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/ingredients`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      // 1) Duplicate name
-      if (res.status === 409) {
-        const errData = await res.json();
-        toast.error(
-          errData.error ||
-            "That ingredient name already exists. To make changes, please edit the ingredient."
-        );
-        return; 
-      }
-
-      // 2) Any other error
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Failed to add ingredient");
-      }
-
-      // 3) Success
-      const created = await res.json();
-      toast.success(`Added “${created.name}”`);
-      onAdd(created);
-      setFormData({ name: "", quantity: 0, unit: "" });
-    } catch (err) {
-      console.error(err);
-      toast.error(err.message || "Something went wrong");
-    }
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.name,
+        quantity: Number(formData.quantity),
+        unit: formData.unit,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        return res.json();
+      })
+      .then((created) => {
+        toast.success("Ingredient created!");
+        onAdd(created);
+      })
+      .catch((err) => {
+        toast.error(err.error || "Failed to create ingredient");
+      });
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Add Ingredient</h3>
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        placeholder="Name"
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="number"
-        name="quantity"
-        value={formData.quantity}
-        placeholder="Quantity"
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="text"
-        name="unit"
-        value={formData.unit}
-        placeholder="Unit"
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Add</button>
+    <form onSubmit={handleSubmit} className="row g-3">
+      <div className="col-12">
+        <label htmlFor="name" className="form-label">
+          Name
+        </label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          className="form-control form-control-sm"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="col-6">
+        <label htmlFor="quantity" className="form-label">
+          Quantity
+        </label>
+        <input
+          id="quantity"
+          name="quantity"
+          type="number"
+          className="form-control form-control-sm"
+          value={formData.quantity}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="col-6">
+        <label htmlFor="unit" className="form-label">
+          Unit
+        </label>
+        <input
+          id="unit"
+          name="unit"
+          type="text"
+          className="form-control form-control-sm"
+          value={formData.unit}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="col-12 text-end">
+        <button type="submit" className="btn btn-primary btn-sm">
+          Create
+        </button>
+      </div>
     </form>
   );
 }
-
-export default IngredientForm;
