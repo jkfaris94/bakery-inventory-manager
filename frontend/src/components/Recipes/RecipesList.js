@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-function RecipesList() {
+export default function RecipesList() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
@@ -11,10 +11,10 @@ function RecipesList() {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes`)
       .then((res) => res.json())
       .then(setRecipes)
-      .catch(console.error);
+      .catch(() => toast.error("Failed to load recipes"));
   }, []);
 
-   // DELETE /recipes/:id
+  // DELETE /recipes/:id
   const handleDelete = (id) => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`, {
       method: "DELETE",
@@ -27,42 +27,64 @@ function RecipesList() {
   };
 
   return (
-     <div>
-      <h2>Recipes</h2>
+    <div className="container py-4">
+      <h2 className="text-center mb-4">Recipes</h2>
+      <div className="d-flex justify-content-end mb-3">
+        <button
+          onClick={() => navigate("/recipes/new")}
+          className="btn btn-primary"
+        >
+          + Create New Recipe
+        </button>
+      </div>
 
-      {/* Create New Recipe Button */}
-      <button onClick={() => navigate("/recipes/new")}>+ Create New Recipe</button>
-
-      <ul>
+      <div className="row row-cols-1 row-cols-md-2 g-4">
         {recipes.map((r) => (
-          <li key={r.id} className="recipe-item">
-            <div className="recipe-header">
-              <strong>{r.name || `Recipe ${r.id}`}</strong>
-              {/* Show image_url instead of baked_good_id */}
+          <div className="col" key={r.id}>
+            <div className="card h-100">
               {r.image_url ? (
                 <img
                   src={r.image_url}
+                  className="card-img-top"
                   alt={r.name}
-                  style={{ width: 120, height: 80, objectFit: 'cover', marginLeft: 8 }}
+                  style={{ objectFit: "cover", height: "180px" }}
                 />
               ) : (
-                <span className="no-image" style={{ marginLeft: 8 }}>No image yet</span>
+                <div
+                  className="d-flex align-items-center justify-content-center bg-light"
+                  style={{ height: "180px" }}
+                >
+                  <span className="text-muted">No image available</span>
+                </div>
               )}
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title">{r.name || `Recipe ${r.id}`}</h5>
+                <div className="mt-auto">
+                  <button
+                    onClick={() => navigate(`/recipes/${r.id}`)}
+                    className="btn btn-outline-primary btn-sm me-2"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => navigate(`/recipes/${r.id}/edit`)}
+                    className="btn btn-outline-secondary btn-sm me-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="btn btn-danger btn-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* View ingredients */}
-            <button onClick={() => navigate(`/recipes/${r.id}`)}>View</button>
-
-            {/* Edit name - future: PUT /recipes/:id */}
-            <button onClick={() => console.log("Edit", r.id)}>Edit</button>
-
-            {/* Delete */}
-            <button onClick={() => handleDelete(r.id)}>Delete</button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
 
-export default RecipesList;

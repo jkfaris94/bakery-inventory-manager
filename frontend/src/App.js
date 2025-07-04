@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import Home from "./components/pages/Home";
+import Home from "./components/shared/Home";
 import Layout from "./components/shared/Layout";
 import IngredientsList from "./components/Ingredients/IngredientsList";
 import BakedGoodsList from "./components/BakedGoods/BakedGoodsList";
