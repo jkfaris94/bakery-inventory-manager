@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import BakedGoodEditForm from "./BakedGoodEditForm";
 
@@ -18,7 +18,7 @@ export default function BakedGoodsList() {
     fetch(`${API_BASE}/baked_goods`)
       .then((res) => res.json())
       .then(setGoods)
-      .catch(console.error);
+      .catch(() => toast.error("Failed to load baked goods"));
   }, [location]);
 
   // Fetch all recipes for bake dropdown
@@ -26,10 +26,9 @@ export default function BakedGoodsList() {
     fetch(`${API_BASE}/recipes`)
       .then((res) => res.json())
       .then(setRecipes)
-      .catch(console.error);
+      .catch(() => toast.error("Failed to load recipes"));
   }, []);
 
-  // Bake selected recipe
   const handleBakeRecipe = () => {
     if (!selectedRecipeId) {
       toast.error("Please select a recipe to bake");
@@ -42,7 +41,6 @@ export default function BakedGoodsList() {
       })
       .then((data) => {
         toast.success(data.message || "Baked successfully!");
-        // Refresh baked goods list
         return fetch(`${API_BASE}/baked_goods`);
       })
       .then((res) => res.json())
@@ -62,23 +60,18 @@ export default function BakedGoodsList() {
         setGoods((prev) => prev.filter((g) => g.id !== id));
         toast("Deleted baked good.", { icon: "🗑️" });
       })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Delete failed.");
-      });
+      .catch(() => toast.error("Delete failed."));
   };
 
-  // Edit setup
   const handleEditClick = (g) => {
     setEditingId(g.id);
     setEditForm({ name: g.name, quantity: g.quantity });
   };
 
   const handleEditChange = ({ target }) => {
-    setEditForm({ ...editForm, [target.name]: target.value });
+    setEditForm((f) => ({ ...f, [target.name]: target.value }));
   };
 
-  // PUT /baked_goods/:id
   const handleEditSubmit = (e) => {
     e.preventDefault();
     fetch(`${API_BASE}/baked_goods/${editingId}`, {
@@ -88,62 +81,93 @@ export default function BakedGoodsList() {
     })
       .then((res) => res.json())
       .then((updated) => {
-        setGoods((prev) =>
-          prev.map((g) => (g.id === updated.id ? updated : g))
-        );
+        setGoods((prev) => prev.map((g) => (g.id === updated.id ? updated : g)));
         setEditingId(null);
         toast.success("Baked good updated!");
       })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Update failed.");
-      });
+      .catch(() => toast.error("Update failed."));
   };
 
   return (
-    <div>
-      <h2>Baked Goods</h2>
+    <div className="container py-4">
+      <h2 className="text-center mb-4">Baked Goods</h2>
 
       {/* Bake a Recipe */}
-      <div style={{ marginBottom: "1rem" }}>
-        <h3>Bake a Recipe</h3>
-        <select
-          value={selectedRecipeId}
-          onChange={(e) => setSelectedRecipeId(e.target.value)}
-          style={{ marginRight: "0.5rem" }}
-        >
-          <option value="">-- Select Recipe --</option>
-          {recipes.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.name || `Recipe ${r.id}`}
-            </option>
-          ))}
-        </select>
-        <button onClick={handleBakeRecipe}>Bake</button>
+      <div className="row justify-content-center mb-4">
+        <div className="col-md-6 col-lg-4">
+          <div className="input-group input-group-sm">
+            <select
+              className="form-select"
+              value={selectedRecipeId}
+              onChange={(e) => setSelectedRecipeId(e.target.value)}
+            >
+              <option value="">-- Select Recipe --</option>
+              {recipes.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name || `Recipe ${r.id}`}
+                </option>
+              ))}
+            </select>
+            <button
+              className="btn btn-success"
+              onClick={handleBakeRecipe}
+            >
+              Bake
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Baked Goods List */}
-      <ul>
-        {goods.map((g) =>
-          editingId === g.id ? (
-            <li key={g.id}>
-              <BakedGoodEditForm
-                formData={editForm}
-                onChange={handleEditChange}
-                onSubmit={handleEditSubmit}
-                onCancel={() => setEditingId(null)}
-              />
-            </li>
+      <div className="row justify-content-center">
+        <div className="col-md-6 col-lg-4">
+          {goods.length === 0 ? (
+            <p className="text-center">No baked goods found.</p>
           ) : (
-            <li key={g.id}>
-              {g.name} — {g.quantity}
-              <button onClick={() => handleEditClick(g)}>Edit</button>
-              <button onClick={() => handleDelete(g.id)}>Delete</button>
-            </li>
-          )
-        )}
-      </ul>
+            <ul className="list-group">
+              {goods.map((g) => (
+                <li
+                  key={g.id}
+                  className="list-group-item d-flex justify-content-between align-items-center py-2"
+                >
+                  {editingId === g.id ? (
+                    <div className="w-100">
+                      <BakedGoodEditForm
+                        formData={editForm}
+                        onChange={handleEditChange}
+                        onSubmit={handleEditSubmit}
+                        onCancel={() => setEditingId(null)}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <span>
+                        <strong>{g.name}</strong> — {g.quantity}
+                      </span>
+                      <div>
+                        <button
+                          className="btn btn-outline-primary btn-sm me-2"
+                          onClick={() => handleEditClick(g)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(g.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
+
 
