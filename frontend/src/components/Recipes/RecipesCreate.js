@@ -35,40 +35,50 @@ export default function RecipeCreate() {
   return (
     <div className="container py-4">
       <h2 className="text-center mb-4">Create New Recipe</h2>
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
-          <label htmlFor="name" className="form-label">Recipe Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            className="form-control"
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
+      <div className="row justify-content-center">
+        <div className="col-md-6 col-lg-4">
+          <form onSubmit={handleSubmit} className="row g-3">
+            <div className="col-12">
+              <label htmlFor="name" className="form-label">Recipe Name</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                className="form-control form-control-sm"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <div className="col-md-6">
-          <label htmlFor="image_url" className="form-label">Image URL</label>
-          <input
-            id="image_url"
-            name="image_url"
-            type="url"
-            className="form-control"
-            placeholder="https://example.com/image.jpg"
-            value={formData.image_url}
-            onChange={handleChange}
-          />
-        </div>
+            <div className="col-12">
+              <label htmlFor="image_url" className="form-label">Image URL</label>
+              <input
+                id="image_url"
+                name="image_url"
+                type="url"
+                className="form-control form-control-sm"
+                placeholder="https://example.com/image.jpg"
+                value={formData.image_url}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="col-12 text-center mt-3">
-          <button type="submit" className="btn btn-success me-2">Create</button>
-          <button type="button" onClick={() => navigate(-1)} className="btn btn-secondary">
-            Cancel
-          </button>
+            <div className="col-12 text-end">
+              <button type="submit" className="btn btn-success btn-sm me-2">
+                Create
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="btn btn-secondary btn-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
