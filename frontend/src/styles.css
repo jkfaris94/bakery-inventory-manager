@@ -37,6 +37,12 @@ a {
   text-decoration: none;
 }
 
+/* make the page background match the footer */
+body, html {
+  min-height: 100%;
+  background-color: #6b4f4f;
+}
+
 /* ================= Layout Helpers ================= */
 .container {
   max-width: var(--max-width);
