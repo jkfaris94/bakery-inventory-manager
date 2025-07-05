@@ -1,106 +1,96 @@
 const knex = require("../db/connection");
 
-//list ingredients 
+// GET /ingredients - List all ingredients
 async function list(req, res, next) {
-    try {
-        const data = await knex("ingredients").select("*");
-        res.json(data);
-    } catch (error) {
-        next(error);
-    }
-}
-
-//read ingredient by ID 
-async function read(req, res, next) {
-    try {
-        const ingredient = await knex("ingredients").where({ id: req.params.id }).first();
-        if (!ingredient) return res.status(404).json({ error: "Ingredient not found"});
-        res.json(ingredient);
-    } catch (error) {
-        next(error);
-    }
-}
-
-//POST ingredient 
-async function create(req, res, next) {
-    const { name, quantity, unit } = req.body;
-    if ( !name || quantity == null || !unit) {
-        return res.status(400).json({ error: "Missing fields: name, quantity, unit"})
-    }
-
-    try {
-    // 1) Check for an existing ingredient (case-insensitive)
-    const existing = await knex("ingredients")
-      .whereRaw("LOWER(name) = ?", name.trim().toLowerCase())
-      .first();
-
-    if (existing) {
-      return res
-        .status(409)
-        .json({
-          error:
-            "Ingredient already exists. To make changes, please edit the ingredient.",
-          existing_id: existing.ingredient_id,
-        });
-    }
-
-    // 2) If not, insert the new one
-    const [newIngredient] = await knex("ingredients")
-      .insert({ name: name.trim(), quantity, unit })
-      .returning("*");
-
-    res.status(201).json(newIngredient);
+  try {
+    const data = await knex("ingredients").select("*");
+    return res.status(200).json({ data });
   } catch (error) {
     next(error);
   }
 }
 
-//PUT update ingredients 
+// GET /ingredients/:id - Read a specific ingredient
+async function read(req, res, next) {
+  const { id } = req.params;
+  try {
+    const item = await knex("ingredients").where({ id }).first();
+    if (!item) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+    return res.status(200).json({ data: item });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// POST /ingredients - Create a new ingredient
+async function create(req, res, next) {
+  const { data = {} } = req.body;
+  const { name, unit = "", quantity = 0 } = data;
+  if (!name) {
+    return res.status(400).json({ error: "Missing required field: name" });
+  }
+  try {
+    const [newId] = await knex("ingredients").insert({ name: name.trim(), unit, quantity });
+    const newItem = await knex("ingredients").where({ id: newId }).first();
+    return res.status(201).json({ data: newItem });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// PUT /ingredients/:id - Update an existing ingredient
 async function update(req, res, next) {
   const { id } = req.params;
-  const { name, quantity, unit } = req.body;
-
+  const { data = {} } = req.body;
+  const { name, unit, quantity } = data;
+  if (!name) {
+    return res.status(400).json({ error: "Missing required field: name" });
+  }
   try {
-    const updated = await knex("ingredients")
-      .where({ id })
-      .update({ name, quantity, unit }, "*");
-
-    if (!updated.length) return res.status(404).json({ error: "Ingredient not found" });
-    res.json(updated[0]);
+    const existing = await knex("ingredients").where({ id }).first();
+    if (!existing) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+    const updatedData = {
+      name: name.trim(),
+      unit: unit !== undefined ? unit : existing.unit,
+      quantity: quantity !== undefined ? quantity : existing.quantity,
+    };
+    await knex("ingredients").where({ id }).update(updatedData);
+    const updated = await knex("ingredients").where({ id }).first();
+    return res.status(201).json({ data: updated });
   } catch (error) {
     next(error);
   }
 }
 
-//DELETE ingredient 
+// DELETE /ingredients/:id - Remove an ingredient
 async function destroy(req, res, next) {
   const { id } = req.params;
-
-  const usedIn = await knex("recipe_ingredients").where({ ingredient_id: id });
-
-  if (usedIn.length > 0) {
-    return res.status(400).json({
-      error: "You must remove this ingredient from all recipes before deleting it.",
-    });
+  try {
+    const existing = await knex("ingredients").where({ id }).first();
+    if (!existing) {
+      return res.status(404).json({ error: "Ingredient not found" });
+    }
+    await knex("ingredients").where({ id }).del();
+    return res.status(200).json({ data: existing });
+  } catch (error) {
+    next(error);
   }
-
-  await knex("ingredients").where({ id }).del();
-  res.sendStatus(204);
 }
 
-// GET /ingredients/:id/recipes
+// GET /ingredients/:id/recipes - List recipes that use an ingredient
 async function listRecipes(req, res, next) {
-  const { id: ingredientId } = req.params;
-
+  const { id } = req.params;
   try {
     const recipes = await knex("recipe_ingredients as ri")
       .join("recipes as r", "ri.recipe_id", "r.id")
       .select("r.id", "r.name")
-      .where("ri.ingredient_id", ingredientId);
-
-    res.json(recipes);
+      .where("ri.ingredient_id", id);
+    return res.status(200).json({ data: recipes });
   } catch (error) {
-    console.error("Error in listRecipes:", error);
     next(error);
   }
 }

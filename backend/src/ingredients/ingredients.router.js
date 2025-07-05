@@ -3,13 +3,18 @@ const controller = require("./ingredients.controller");
 const router = express.Router();
 
 router
-  .get("/", controller.list)
-  .post("/", controller.create);
+  .route("/")
+  .get(controller.list)
+  .post(controller.create);
+
 router
-  .get("/:id", controller.read)
-  .put("/:id", controller.update)
-  .delete("/:id", controller.delete);
+  .route("/:id")
+  .get(controller.read)
+  .put(controller.update)
+  .delete(controller.delete);
+
 router
-  .get("/:id/recipes", controller.listRecipes);
+  .route("/:id/recipes")
+  .get(controller.listRecipes);
 
 module.exports = router;

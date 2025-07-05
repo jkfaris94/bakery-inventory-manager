@@ -4,7 +4,7 @@ const knex = require("../db/connection");
 async function list(req, res, next) {
   try {
     const data = await knex("recipes").select("*");
-    res.json(data);
+    res.status(200).json({ data });
   } catch (error) {
     next(error);
   }
@@ -13,9 +13,13 @@ async function list(req, res, next) {
 // GET /recipes/:id - Get a recipe by ID
 async function read(req, res, next) {
   try {
-    const recipe = await knex("recipes").where({ id: req.params.id }).first();
-    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
-    res.json(recipe);
+    const recipe = await knex("recipes")
+      .where({ id: req.params.id })
+      .first();
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    res.status(200).json({ data: recipe });
   } catch (error) {
     next(error);
   }
@@ -24,18 +28,17 @@ async function read(req, res, next) {
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
   const { name } = req.body;
-
   if (!name) {
     return res.status(400).json({ error: "Missing required field: name" });
   }
 
-    // Check if name already exists
-  const existing = await knex("recipes").where({ name }).first();
-  if (existing) {
-    return res.status(409).json({ error: "Recipe name already taken" });
-  }
-
   try {
+    // Check if name already exists
+    const existing = await knex("recipes").where({ name }).first();
+    if (existing) {
+      return res.status(409).json({ error: "Recipe name already taken" });
+    }
+
     const newRecipe = await knex.transaction(async (trx) => {
       // Create a baked_good
       const [bg] = await trx("baked_goods")
@@ -50,7 +53,7 @@ async function create(req, res, next) {
       return recipe;
     });
 
-    res.status(201).json(newRecipe);
+    res.status(201).json({ data: newRecipe });
   } catch (err) {
     next(err);
   }
@@ -59,9 +62,14 @@ async function create(req, res, next) {
 // DELETE /recipes/:id - Remove a recipe
 async function destroy(req, res, next) {
   try {
-    const deleted = await knex("recipes").where({ id: req.params.id }).del();
-    if (!deleted) return res.status(404).json({ error: "Recipe not found" });
-    res.status(204).end();
+    const recipe = await knex("recipes")
+      .where({ id: req.params.id })
+      .first();
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+    await knex("recipes").where({ id: req.params.id }).del();
+    res.status(200).json({ data: recipe });
   } catch (error) {
     next(error);
   }
@@ -70,7 +78,6 @@ async function destroy(req, res, next) {
 // POST /recipes/:id/bake - Bake a recipe
 async function bake(req, res, next) {
   const { id: recipe_id } = req.params;
-
   try {
     // 1. Fetch recipe
     const recipe = await knex("recipes")
@@ -123,8 +130,7 @@ async function bake(req, res, next) {
         .first();
     });
 
-    // 5. Return success
-    res.status(200).json({ message: "Baking complete!", baked_good: updatedGood });
+    res.status(200).json({ data: updatedGood });
   } catch (error) {
     next(error);
   }

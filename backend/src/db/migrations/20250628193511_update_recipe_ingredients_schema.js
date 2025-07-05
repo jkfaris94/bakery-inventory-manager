@@ -4,8 +4,7 @@
  */
 exports.up = function(knex) {
   return knex.schema.alterTable("recipe_ingredients", (table) => {
-    table.string("name");
-    table.integer("ingredient_id").nullable().alter();
+    table.integer("ingredient_id").unsigned().notNullable().alter();
   });
 };
 
@@ -14,5 +13,7 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-  
+  return knex.schema.alterTable("recipe_ingredients", (table) => {
+    table.integer("ingredient_id").unsigned().notNullable().alter();
+  });
 };
