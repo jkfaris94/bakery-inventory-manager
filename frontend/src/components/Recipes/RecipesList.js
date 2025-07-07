@@ -9,8 +9,11 @@ export default function RecipesList() {
   // GET /recipes
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes`)
-      .then((res) => res.json())
-      .then(setRecipes)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load");
+        return res.json();
+      })
+      .then(({ data }) => setRecipes(data))
       .catch(() => toast.error("Failed to load recipes"));
   }, []);
 
@@ -19,7 +22,9 @@ export default function RecipesList() {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`, {
       method: "DELETE",
     })
-      .then(() => {
+      .then((res) => {
+        if (!res.ok) throw new Error("Delete failed");
+        // remove from state
         setRecipes((prev) => prev.filter((r) => r.id !== id));
         toast("Recipe deleted", { icon: "🗑️" });
       })
@@ -46,7 +51,7 @@ export default function RecipesList() {
                 <img
                   src={r.image_url}
                   className="card-img-top"
-                  alt={r.name}
+                  alt={r.title}
                   style={{ objectFit: "cover", height: "180px" }}
                 />
               ) : (
@@ -58,7 +63,7 @@ export default function RecipesList() {
                 </div>
               )}
               <div className="card-body d-flex flex-column">
-                <h5 className="card-title">{r.name || `Recipe ${r.id}`}</h5>
+                <h5 className="card-title">{r.title || `Recipe ${r.id}`}</h5>
                 <div className="mt-auto">
                   <button
                     onClick={() => navigate(`/recipes/${r.id}`)}
