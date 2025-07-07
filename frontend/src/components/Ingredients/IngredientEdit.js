@@ -7,13 +7,21 @@ export default function IngredientEdit() {
   const { ingredientId } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState(null);
+  // Initialize formData to empty object for controlled form
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
+    // Fetch existing ingredient, destructure JSON envelope
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`)
-      .then((res) => res.json())
-      .then((data) => setFormData(data))
-      .catch(() => toast.error("Failed to load ingredient"));
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(({ data }) => setFormData(data))
+      .catch((err) => {
+        console.error("Failed to load ingredient", err);
+        toast.error("Failed to load ingredient");
+      });
   }, [ingredientId]);
 
   const handleChange = ({ target }) => {
@@ -25,22 +33,26 @@ export default function IngredientEdit() {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ data: formData }),
     })
       .then((res) => {
         if (!res.ok) return res.json().then((err) => Promise.reject(err));
         return res.json();
       })
-      .then(() => {
+      .then(({ data }) => {
         toast.success("Ingredient updated!");
         navigate(`/ingredients/${ingredientId}`);
       })
-      .catch(() => toast.error("Update failed"));
+      .catch((err) => {
+        console.error("Update failed", err);
+        toast.error(err.error || "Update failed");
+      });
   };
 
   const handleCancel = () => navigate(-1);
 
-  if (!formData) return <p>Loading...</p>;
+  // Show loading if formData missing id
+  if (!formData.id) return <p>Loading...</p>;
 
   return (
     <div className="container py-4">
