@@ -8,8 +8,13 @@ export default function IngredientsList() {
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`)
-      .then((res) => res.json())
-      .then(setIngredients)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(({ data }) => setIngredients(data))
       .catch(() => toast.error("Failed to load ingredients"));
   }, []);
 

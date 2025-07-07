@@ -11,24 +11,60 @@ export default function BakedGoodsList() {
   const [selectedRecipeId, setSelectedRecipeId] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "", quantity: 0 });
+  const navigate = useNavigate();
   const location = useLocation();
+
+  // Utility to safely unwrap API responses wrapped in { data: [...] }
+  const unwrap = (json) => {
+    if (json && Array.isArray(json.data)) {
+      return json.data;
+    }
+    return [];
+  };
 
   // Fetch baked goods when page mounts or location changes
   useEffect(() => {
+    let isMounted = true;
     fetch(`${API_BASE}/baked_goods`)
-      .then((res) => res.json())
-      .then(setGoods)
-      .catch(() => toast.error("Failed to load baked goods"));
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        if (isMounted) setGoods(unwrap(json));
+      })
+      .catch((err) => {
+        console.error(err);
+        if (isMounted) setGoods([]);
+        toast.error("Failed to load baked goods");
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [location]);
 
   // Fetch all recipes for bake dropdown
   useEffect(() => {
+    let isMounted = true;
     fetch(`${API_BASE}/recipes`)
-      .then((res) => res.json())
-      .then(setRecipes)
-      .catch(() => toast.error("Failed to load recipes"));
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        if (isMounted) setRecipes(unwrap(json));
+      })
+      .catch((err) => {
+        console.error(err);
+        if (isMounted) setRecipes([]);
+        toast.error("Failed to load recipes");
+      });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
+  // POST /recipes/:id/bake
   const handleBakeRecipe = () => {
     if (!selectedRecipeId) {
       toast.error("Please select a recipe to bake");
@@ -36,16 +72,18 @@ export default function BakedGoodsList() {
     }
     fetch(`${API_BASE}/recipes/${selectedRecipeId}/bake`, { method: "POST" })
       .then((res) => {
-        if (!res.ok) return res.json().then((data) => Promise.reject(data));
+        if (!res.ok)
+          return res.json().then((err) => Promise.reject(err));
         return res.json();
       })
-      .then((data) => {
-        toast.success(data.message || "Baked successfully!");
+      .then(({ data, message }) => {
+        toast.success(message || "Baked successfully!");
         return fetch(`${API_BASE}/baked_goods`);
       })
       .then((res) => res.json())
-      .then(setGoods)
+      .then((json) => setGoods(unwrap(json)))
       .catch((error) => {
+        console.error(error);
         if (error?.missing) {
           toast.error("Not enough ingredients to bake!");
         } else {
@@ -54,13 +92,21 @@ export default function BakedGoodsList() {
       });
   };
 
+  // DELETE /baked_goods/:id
   const handleDelete = (id) => {
     fetch(`${API_BASE}/baked_goods/${id}`, { method: "DELETE" })
-      .then(() => {
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(({ data }) => {
         setGoods((prev) => prev.filter((g) => g.id !== id));
         toast("Deleted baked good.", { icon: "🗑️" });
       })
-      .catch(() => toast.error("Delete failed."));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to delete baked good");
+      });
   };
 
   const handleEditClick = (g) => {
@@ -79,13 +125,19 @@ export default function BakedGoodsList() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editForm),
     })
-      .then((res) => res.json())
-      .then((updated) => {
-        setGoods((prev) => prev.map((g) => (g.id === updated.id ? updated : g)));
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(({ data }) => {
+        setGoods((prev) => prev.map((g) => (g.id === data.id ? data : g)));
         setEditingId(null);
         toast.success("Baked good updated!");
       })
-      .catch(() => toast.error("Update failed."));
+      .catch((err) => {
+        console.error(err);
+        toast.error("Update failed.");
+      });
   };
 
   return (
@@ -104,7 +156,7 @@ export default function BakedGoodsList() {
               <option value="">-- Select Recipe --</option>
               {recipes.map((r) => (
                 <option key={r.id} value={r.id}>
-                  {r.name || `Recipe ${r.id}`}
+                  {r.title}
                 </option>
               ))}
             </select>
@@ -169,5 +221,3 @@ export default function BakedGoodsList() {
     </div>
   );
 }
-
-
