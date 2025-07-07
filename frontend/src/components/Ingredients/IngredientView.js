@@ -22,7 +22,7 @@ export default function IngredientView() {
         console.error("Failed to load ingredient", err);
         toast.error("Failed to load ingredient");
       });
-
+      // Fetch related recipes
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}/recipes`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
