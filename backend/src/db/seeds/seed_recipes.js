@@ -13,8 +13,23 @@ exports.seed = async function (knex) {
   }
 
   await knex('recipes').insert([
-    { name: "Cookie Recipe", baked_good_id: 1 },
-    { name: "Banana Bread Recipe", baked_good_id: 2 },
-    { name: "Croissant Recipe", baked_good_id: 3 },
+    {
+      title:         "Cookie Recipe",
+      description:   "Classic chocolate chip cookies with a crispy edge and chewy center.",
+      image_url:     "https://example.com/cookies.jpg",
+      baked_good_id: 1,
+    },
+    {
+      title:         "Banana Bread Recipe",
+      description:   "Moist banana bread with walnuts and a hint of cinnamon.",
+      image_url:     "https://example.com/banana-bread.jpg",
+      baked_good_id: 2,
+    },
+    {
+      title:         "Croissant Recipe",
+      description:   "Flaky, buttery croissants made with laminated dough.",
+      image_url:     "https://example.com/croissants.jpg",
+      baked_good_id: 3,
+    },
   ]);
 };
