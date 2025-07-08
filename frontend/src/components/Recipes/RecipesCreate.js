@@ -4,12 +4,14 @@ import { toast } from "react-hot-toast";
 
 export default function RecipeCreate() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "", image_url: "" });
+  const [formData, setFormData] = useState({ 
+    title: "",
+    image_url: "",
+    description: "", 
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = ({ target: { name, value } }) =>
     setFormData((fd) => ({ ...fd, [name]: value }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,13 +41,13 @@ export default function RecipeCreate() {
         <div className="col-md-6 col-lg-4">
           <form onSubmit={handleSubmit} className="row g-3">
             <div className="col-12">
-              <label htmlFor="name" className="form-label">Recipe Name</label>
+              <label htmlFor="title" className="form-label">Recipe Name</label>
               <input
-                id="name"
-                name="name"
+                id="title"
+                name="title"
                 type="text"
                 className="form-control form-control-sm"
-                value={formData.name}
+                value={formData.title}
                 onChange={handleChange}
                 required
               />
@@ -61,6 +63,19 @@ export default function RecipeCreate() {
                 placeholder="https://example.com/image.jpg"
                 value={formData.image_url}
                 onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="col-12">
+              <label htmlFor="description" className="form-label">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                className="form-control form-control-sm"
+                value={formData.description}
+                onChange={handleChange}
+                required
               />
             </div>
 
