@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
+  // Local state for all available ingredients
   const [ingredients, setIngredients] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -8,7 +9,11 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`)
       .then((res) => res.json())
-      .then(setIngredients)
+      .then((json) => {
+        // Expecting { data: [...] }
+        const list = json.data;
+        setIngredients(Array.isArray(list) ? list : []);
+      })
       .catch(console.error);
   }, []);
 
@@ -29,7 +34,10 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
         }),
       }
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        return res.json();
+      })
       .then(() => {
         onAdd();
         setSelectedId("");
@@ -41,10 +49,10 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   return (
     <div className="row justify-content-center mb-4">
       <div className="col-md-6 col-lg-4">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="row g-3">
           <h5 className="mb-3 text-center">Add Ingredient to Recipe</h5>
 
-          <div className="mb-3">
+          <div className="col-12">
             <label htmlFor="ingredientSelect" className="form-label">
               Ingredient
             </label>
@@ -64,9 +72,9 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
             </select>
           </div>
 
-          <div className="mb-3">
+          <div className="col-12">
             <label htmlFor="quantityInput" className="form-label">
-              Quantity
+              Quantity Needed
             </label>
             <input
               id="quantityInput"
@@ -78,7 +86,7 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
             />
           </div>
 
-          <div className="text-end">
+          <div className="col-12 text-end">
             <button type="submit" className="btn btn-primary btn-sm">
               Add
             </button>
@@ -88,3 +96,4 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
     </div>
   );
 }
+
