@@ -27,35 +27,59 @@ async function read(req, res, next) {
 
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
-  const { name } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: "Missing required field: name" });
+  // 1) Pull payload (supporting both { data:… } and top-level for Postman)
+  const incoming = req.body.data || req.body;
+  const {
+    title,
+    image_url,
+    description,
+    baked_good_id: clientBgId,
+  } = incoming;
+
+  // 2) Validation: title, image_url, and description are now all mandatory
+  if (!title) {
+    return next({ status: 400, message: "Recipe must include a title" });
+  }
+  if (!image_url) {
+    return next({ status: 400, message: "Recipe must include an image_url" });
+  }
+  if (!description) {
+    return next({ status: 400, message: "Recipe must include a description" });
   }
 
   try {
-    // Check if name already exists
-    const existing = await knex("recipes").where({ name }).first();
-    if (existing) {
-      return res.status(409).json({ error: "Recipe name already taken" });
-    }
+    // 3) In one transaction, auto-create baked_good if none supplied
+    const newRecipeId = await knex.transaction(async (trx) => {
+      let bgId = clientBgId;
 
-    const newRecipe = await knex.transaction(async (trx) => {
-      // Create a baked_good
-      const [bg] = await trx("baked_goods")
-        .insert({ name, quantity: 0 })
-        .returning("*");
+      if (!bgId) {
+        // auto-create a baked_good row
+        const [insertedBgId] = await trx("baked_goods")
+          .insert({ name: title, quantity: 0 });
+        bgId = insertedBgId;
+      }
 
-      // Create the recipe linked to that baked_good
-      const [recipe] = await trx("recipes")
-        .insert({ name, baked_good_id: bg.id })
-        .returning("*");
+      // insert the recipe pointing at that baked_good
+      const [insertedRecipeId] = await trx("recipes")
+        .insert({
+          title,
+          image_url,
+          description,
+          baked_good_id: bgId,
+        });
 
-      return recipe;
+      return insertedRecipeId;
     });
 
+    // 4) Fetch and return the created recipe
+    const newRecipe = await knex("recipes")
+      .select("id", "title", "image_url", "description", "baked_good_id")
+      .where({ id: newRecipeId })
+      .first();
+
     res.status(201).json({ data: newRecipe });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 }
 
