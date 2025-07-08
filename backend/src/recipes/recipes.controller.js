@@ -36,7 +36,7 @@ async function create(req, res, next) {
     baked_good_id: clientBgId,
   } = incoming;
 
-  // 2) Validation: title, image_url, and description are now all mandatory
+  // 2) Validation: title, image_url, and description
   if (!title) {
     return next({ status: 400, message: "Recipe must include a title" });
   }
@@ -48,7 +48,7 @@ async function create(req, res, next) {
   }
 
   try {
-    // 3) In one transaction, auto-create baked_good if none supplied
+    // 3) In one transaction, auto-create baked_good 
     const newRecipeId = await knex.transaction(async (trx) => {
       let bgId = clientBgId;
 
