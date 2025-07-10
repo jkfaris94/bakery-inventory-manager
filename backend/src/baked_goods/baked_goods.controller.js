@@ -63,23 +63,11 @@ async function update(req, res, next) {
   }
 }
 
-// DELETE /baked_goods/:id - Remove a baked good
-async function destroy(req, res, next) {
-  try {
-    const deleted = await knex("baked_goods").where({ id: req.params.id }).del();
-    if (!deleted) {
-      return res.status(404).json({ error: "Baked good not found" });
-    }
-    res.status(204).json({});
-  } catch (error) {
-    next(error);
-  }
-}
 
 module.exports = {
   list,
   read,
   create,
   update,
-  delete: destroy,
+  // delete: destroy,
 };

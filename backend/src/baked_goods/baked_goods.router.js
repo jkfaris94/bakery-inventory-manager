@@ -9,6 +9,5 @@ router
 router
   .get("/:id", controller.read)
   .put("/:id", controller.update)
-  .delete("/:id", controller.delete);
 
 module.exports = router;
