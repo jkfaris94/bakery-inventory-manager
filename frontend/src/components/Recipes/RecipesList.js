@@ -19,6 +19,9 @@ export default function RecipesList() {
 
   // DELETE /recipes/:id
   const handleDelete = (id) => {
+    // ask for confirmation before deleting
+  const ok = window.confirm("Are you sure you want to delete this recipe?");
+  if (!ok) return; 
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`, {
       method: "DELETE",
     })
