@@ -4,7 +4,7 @@ const knex = require("../db/connection");
 async function list(req, res, next) {
   try {
     const data = await knex("baked_goods").select("*");
-    res.json(data);
+    res.json({ data });
   } catch (error) {
     next(error);
   }
@@ -15,7 +15,7 @@ async function read(req, res, next) {
   try {
     const good = await knex("baked_goods").where({ id: req.params.id }).first();
     if (!good) return res.status(404).json({ error: "Baked good not found" });
-    res.json(good);
+    res.json({ data: good });
   } catch (error) {
     next(error);
   }
@@ -33,7 +33,7 @@ async function create(req, res, next) {
       .insert({ name, quantity })
       .returning("*");
 
-    res.status(201).json(newGood);
+    res.status(201).json({ data: newGood });
   } catch (error) {
     next(error);
   }
@@ -57,7 +57,7 @@ async function update(req, res, next) {
       return res.status(404).json({ error: "Baked good not found" });
     }
 
-    res.json(updated[0]);
+    res.json({ data: updated[0] });
   } catch (error) {
     next(error);
   }
@@ -70,7 +70,7 @@ async function destroy(req, res, next) {
     if (!deleted) {
       return res.status(404).json({ error: "Baked good not found" });
     }
-    res.status(204).end();
+    res.status(204).json({});
   } catch (error) {
     next(error);
   }
