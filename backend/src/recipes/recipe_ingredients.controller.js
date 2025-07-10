@@ -37,6 +37,24 @@ async function create(req, res, next) {
     // Validate recipe exists
     const recipe = await knex("recipes").where({ id: recipe_id }).first();
     if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+    
+    // Update existing ingredient if ingredient already exists
+    let ri;
+    if (ingredient_id) {
+      // Check if this ingredient is already on the recipe
+      ri = await knex("recipe_ingredients")
+        .where({ recipe_id, ingredient_id })
+        .first();
+
+      if (ri) {
+        // Update existing row: increment quantity_needed
+        const [updated] = await knex("recipe_ingredients")
+          .where({ id: ri.id })
+          .increment("quantity_needed", quantity_needed)
+          .returning("*");
+        return res.status(200).json({ data: updated });
+      }
+    }
 
     // Prepare insert object
     const insertData = {
