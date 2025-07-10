@@ -87,7 +87,7 @@ async function listRecipes(req, res, next) {
   try {
     const recipes = await knex("recipe_ingredients as ri")
       .join("recipes as r", "ri.recipe_id", "r.id")
-      .select("r.id", "r.name")
+      .select("r.id", "r.title")
       .where("ri.ingredient_id", id);
     return res.status(200).json({ data: recipes });
   } catch (error) {
