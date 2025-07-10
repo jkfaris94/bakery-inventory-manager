@@ -82,7 +82,7 @@ export default function IngredientView() {
           <ul className="list-group">
             {recipes.map((r) => (
               <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {r.name || `Recipe ${r.id}`}
+                {r.title || `Recipe ${r.id}`}
                 <button onClick={() => navigate(`/recipes/${r.id}`)} className="btn btn-outline-primary btn-sm">
                   View
                 </button>
