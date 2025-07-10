@@ -13,6 +13,7 @@ export default function RecipeView() {
   // Fetch recipe and ingredients
   useEffect(() => {
     async function load() {
+      //fetch recipe by ID
       try {
         const recipeRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`
@@ -24,6 +25,7 @@ export default function RecipeView() {
         } = await recipeRes.json();
         setRecipe(recipeData);
 
+        //fetch ingredients for the recipe
         const ingrRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
         );
@@ -82,6 +84,9 @@ export default function RecipeView() {
   return (
     <div className="container py-4">
       <h2 className="text-center mb-3">{recipeTitle}</h2>
+      {recipe.description && (
+        <p className="text-center mb-4">{recipe.description}</p>
+      )}
       <div className="row justify-content-center mb-4">
         <div className="col-md-6">
           {recipe.image_url ? (
