@@ -72,7 +72,7 @@ export default function RecipesList() {
                     View
                   </button>
                   <button
-                    onClick={() => navigate(`/recipes/${r.id}/edit`)}
+                    onClick={() => navigate(`/recipes/${r.id}`)}
                     className="btn btn-outline-secondary btn-sm me-2"
                   >
                     Edit
