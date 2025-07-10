@@ -98,6 +98,22 @@ export default function RecipeView() {
 
   if (!recipe) return <p>Loading…</p>;
 
+  // DELETE /recipes/:id
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this recipe?")) return;
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("Delete failed");
+      toast("Recipe deleted", { icon: "🗑️" });
+      navigate("/recipes");
+    } catch {
+      toast.error("Failed to delete recipe");
+    }
+  };
+
   return (
     <div className="container py-4">
       <h2 className="text-center mb-3">{recipeTitle}</h2>
@@ -134,6 +150,12 @@ export default function RecipeView() {
               onClick={() => navigate(-1)}
             >
               Back
+            </button>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={handleDelete}
+            >
+              Delete Recipe
             </button>
             {!canBake && missing.length > 0 && (
               <div className="alert alert-warning mt-3">
