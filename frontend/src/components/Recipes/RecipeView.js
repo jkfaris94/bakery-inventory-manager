@@ -146,13 +146,13 @@ export default function RecipeView() {
               Bake "{recipeTitle}"
             </button>
             <button
-              className="btn btn-secondary btn-sm"
+              className="btn btn-secondary btn-sm me-2"
               onClick={() => navigate(-1)}
             >
               Back
             </button>
             <button
-              className="btn btn-danger btn-sm"
+              className="btn btn-danger btn-sm me-2"
               onClick={handleDelete}
             >
               Delete Recipe
