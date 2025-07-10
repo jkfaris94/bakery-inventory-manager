@@ -79,6 +79,23 @@ export default function RecipeView() {
       .catch(console.error);
   };
 
+  //Disable button if we can't bake
+  const canBake = ingredients.every(
+    ({ quantity_available, quantity_needed }) =>
+      quantity_available >= quantity_needed
+  );
+
+  // Build a list of only the missing bits
+  const missing = ingredients
+    .filter(({ quantity_available, quantity_needed }) =>
+      quantity_available < quantity_needed
+    )
+    .map(({ name, quantity_available, quantity_needed, unit }) => ({
+      name,
+      missingBy: quantity_needed - quantity_available,
+      unit,
+    }));
+
   if (!recipe) return <p>Loading…</p>;
 
   return (
@@ -105,7 +122,11 @@ export default function RecipeView() {
             </div>
           )}
           <div className="text-center mb-3">
-            <button className="btn btn-success btn-sm me-2" onClick={handleBake}>
+            <button 
+              className="btn btn-success btn-sm me-2" 
+              disabled={!canBake}
+              onClick={handleBake}
+            >
               Bake "{recipeTitle}"
             </button>
             <button
@@ -114,6 +135,18 @@ export default function RecipeView() {
             >
               Back
             </button>
+            {!canBake && missing.length > 0 && (
+              <div className="alert alert-warning mt-3">
+                <strong>Missing ingredients:</strong>
+                <ul>
+                  {missing.map((m) => (
+                    <li key={m.name}>
+                      {m.name}: need {m.missingBy} more {m.unit}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>
