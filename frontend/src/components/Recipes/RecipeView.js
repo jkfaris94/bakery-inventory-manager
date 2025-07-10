@@ -14,25 +14,22 @@ export default function RecipeView() {
   useEffect(() => {
     async function load() {
       try {
-        // Fetch recipe details
         const recipeRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`
         );
         if (!recipeRes.ok) throw new Error("Could not load recipe");
-        const recipeJson = await recipeRes.json();
-        // destructure data from response
-        const recipeData = recipeJson.data;
+        
+        const {
+          data: recipeData
+        } = await recipeRes.json();
         setRecipe(recipeData);
 
-        // Fetch recipe ingredients
         const ingrRes = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
         );
         if (!ingrRes.ok) throw new Error("Could not load ingredients");
-        const ingrJson = await ingrRes.json();
-        // destructure data array
-        const ingrList = ingrJson.data;
-        setIngredients(Array.isArray(ingrList) ? ingrList : []);
+        const ingrData = await ingrRes.json();
+        setIngredients(ingrData);
       } catch (err) {
         console.error(err);
         toast.error("Failed to load recipe");
@@ -41,18 +38,13 @@ export default function RecipeView() {
     load();
   }, [id]);
 
-  if (!recipe) {
-    return <p>Loading…</p>;
-  }
-
-  const recipeTitle = recipe.title || `Recipe ${id}`;
+  const recipeTitle = recipe?.title ?? `Recipe ${id}`;
 
   // Bake the recipe
   const handleBake = () => {
-    fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/bake`,
-      { method: "POST" }
-    )
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/bake`, {
+      method: "POST",
+    })
       .then((res) => {
         if (!res.ok) return res.json().then((data) => Promise.reject(data));
         return res.json();
@@ -85,6 +77,8 @@ export default function RecipeView() {
       .catch(console.error);
   };
 
+  if (!recipe) return <p>Loading…</p>;
+
   return (
     <div className="container py-4">
       <h2 className="text-center mb-3">{recipeTitle}</h2>
@@ -93,7 +87,7 @@ export default function RecipeView() {
           {recipe.image_url ? (
             <img
               src={recipe.image_url}
-              alt={recipe.title}
+              alt={recipe.name}
               className="img-fluid rounded mx-auto d-block mb-3"
               style={{ maxHeight: "150px", objectFit: "cover" }}
             />
@@ -106,10 +100,7 @@ export default function RecipeView() {
             </div>
           )}
           <div className="text-center mb-3">
-            <button
-              className="btn btn-success btn-sm me-2"
-              onClick={handleBake}
-            >
+            <button className="btn btn-success btn-sm me-2" onClick={handleBake}>
               Bake "{recipeTitle}"
             </button>
             <button
@@ -154,13 +145,12 @@ export default function RecipeView() {
         <div className="col-md-6">
           <AddRecipeIngredientForm
             recipeId={id}
-            ingredients={ingredients}
             onAdd={() => {
               fetch(
                 `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
               )
                 .then((res) => res.json())
-                .then(({ data }) => setIngredients(data));
+                .then(setIngredients);
             }}
           />
         </div>
