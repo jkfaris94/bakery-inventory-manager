@@ -93,21 +93,21 @@ export default function BakedGoodsList() {
   };
 
   // DELETE /baked_goods/:id
-  const handleDelete = (id) => {
-    fetch(`${API_BASE}/baked_goods/${id}`, { method: "DELETE" })
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(({ data }) => {
-        setGoods((prev) => prev.filter((g) => g.id !== id));
-        toast("Deleted baked good.", { icon: "🗑️" });
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error("Failed to delete baked good");
-      });
-  };
+  // const handleDelete = (id) => {
+  //   fetch(`${API_BASE}/baked_goods/${id}`, { method: "DELETE" })
+  //     .then((res) => {
+  //       if (!res.ok) throw new Error();
+  //       return res.json();
+  //     })
+  //     .then(({ data }) => {
+  //       setGoods((prev) => prev.filter((g) => g.id !== id));
+  //       toast("Deleted baked good.", { icon: "🗑️" });
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //       toast.error("Failed to delete baked good");
+  //     });
+  // };
 
   const handleEditClick = (g) => {
     setEditingId(g.id);
@@ -202,12 +202,6 @@ export default function BakedGoodsList() {
                           onClick={() => handleEditClick(g)}
                         >
                           Edit
-                        </button>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(g.id)}
-                        >
-                          Delete
                         </button>
                       </div>
                     </>
