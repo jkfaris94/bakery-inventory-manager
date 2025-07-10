@@ -19,15 +19,15 @@ export default function RecipeCreate() {
     fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ data: formData }),
     })
       .then((res) => {
         if (!res.ok) return res.json().then((err) => Promise.reject(err));
         return res.json();
       })
-      .then((created) => {
+      .then(({ data }) => {
         toast.success("Recipe created!");
-        navigate(`/recipes/${created.id}`);
+        navigate(`/recipes/${data.id}`);
       })
       .catch((err) => {
         toast.error(err.error || "Failed to create recipe");
@@ -97,4 +97,3 @@ export default function RecipeCreate() {
     </div>
   );
 }
-
