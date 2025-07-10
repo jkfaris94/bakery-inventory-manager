@@ -11,6 +11,7 @@ async function list(req, res, next) {
       .select(
         "i.id as ingredient_id",
         "i.name",
+        "i.quantity as quantity_available",
         "ri.quantity_needed",
         "ri.unit"
       );
