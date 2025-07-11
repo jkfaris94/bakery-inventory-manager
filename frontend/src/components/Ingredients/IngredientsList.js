@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 export default function IngredientsList() {
   const [ingredients, setIngredients] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`)
+    const controller = new AbortController();
+    fetch(`${API_BASE}/ingredients`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
@@ -15,8 +18,15 @@ export default function IngredientsList() {
         return res.json();
       })
       .then(({ data }) => setIngredients(data))
-      .catch(() => toast.error("Failed to load ingredients"));
-  }, []);
+    .catch((err) => {
+      if (err.name === "AbortError") return;
+      console.error("Ingredients fetch failed:", err);
+      toast.error("Failed to load ingredients");
+    });
+
+  // cleanup: cancel fetch if the component unmounts
+  return () => controller.abort();
+}, []);
 
   return (
     <div className="container py-4">
