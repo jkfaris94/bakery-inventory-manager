@@ -1,13 +1,21 @@
 const express = require("express");
 const controller = require("./baked_goods.controller");
+const methodNotAllowed = require("../errors/methodNotAllowed");
+
 const router = express.Router();
 
+// /baked_goods
 router
-  .get("/", controller.list)
-  .post("/", controller.create);
+  .route("/")
+  .get(controller.list)
+  .post(controller.create)
+  .all(methodNotAllowed);
 
+// /baked_goods/:id
 router
-  .get("/:id", controller.read)
-  .put("/:id", controller.update)
+  .route("/:id")
+  .get(controller.read)
+  .put(controller.update)
+  .all(methodNotAllowed);
 
 module.exports = router;
