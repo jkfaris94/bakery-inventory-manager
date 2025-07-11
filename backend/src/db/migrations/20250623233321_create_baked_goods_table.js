@@ -11,7 +11,8 @@ exports.up = function(knex) {
       .notNullable()
       .references('id')
       .inTable('recipes')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE')
+      .unique(); // Ensure one baked good per recipe
     tbl.string('name').notNullable();
     tbl.integer('quantity').notNullable().defaultTo(0);
     tbl.timestamps(true, true);

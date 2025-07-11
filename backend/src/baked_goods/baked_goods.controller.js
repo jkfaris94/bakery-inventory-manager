@@ -23,17 +23,40 @@ async function read(req, res, next) {
 
 // POST /baked_goods - Create a new baked good
 async function create(req, res, next) {
-  const { name, quantity = 0 } = req.body;
+  const incoming = req.body.data || req.body;
+  const { recipe_id, name, quantity = 0 } = incoming;
+
+  if (!recipe_id) {
+    return res.status(400).json({ error: "Must include recipe_id" });
+  }
   if (!name) {
-    return res.status(400).json({ error: "Missing required field: name" });
+    return res.status(400).json({ error: "Must include name" });
   }
 
   try {
-    const [newGood] = await knex("baked_goods")
-      .insert({ name, quantity })
-      .returning("*");
+    // 1) Check if there's already a baked_good for this recipe
+    const existing = await knex("baked_goods")
+      .where({ recipe_id })
+      .first();
 
-    res.status(201).json({ data: newGood });
+    let bakedGood;
+    if (existing) {
+      // 2a) If it exists, increment its quantity
+      await knex("baked_goods")
+        .where({ recipe_id })
+        .increment("quantity", quantity);
+
+      bakedGood = await knex("baked_goods")
+        .where({ recipe_id })
+        .first();
+      res.status(200).json({ data: bakedGood });
+    } else {
+      // 2b) Otherwise insert a brand-new row
+      const [newGood] = await knex("baked_goods")
+        .insert({ recipe_id, name, quantity })
+        .returning("*");
+      res.status(201).json({ data: newGood });
+    }
   } catch (error) {
     next(error);
   }
@@ -69,5 +92,4 @@ module.exports = {
   read,
   create,
   update,
-  // delete: destroy,
 };

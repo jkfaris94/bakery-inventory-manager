@@ -45,6 +45,14 @@ async function create(req, res, next) {
     const newRecipe = await knex.transaction(async (trx) => {
       //  Insert recipe
       const [recipeId] = await trx("recipes").insert({ title, image_url, description });
+
+      // auto-create its baked_good at quantity = 0
+      await trx("baked_goods").insert({
+        recipe_id: recipeId,
+        name:      title,
+        quantity:  0,
+      });
+
       //  Return the full recipe row
       return await trx("recipes").where({ id: recipeId }).first();
     });
