@@ -27,8 +27,8 @@ main {
 
 main ul,
 main ol {
-  display: inline-block;    /* shrink‐wrap to their content */  
-  margin: 1rem auto;        /* center the list block horizontally */
+  display: inline-block;  
+  margin: 1rem auto;        
    text-align: left;
 }
 
@@ -74,10 +74,5 @@ header a, footer a {
 
 .home-hero h1 {
   margin-bottom: 0.5rem;
-}
-
-button:hover {
-  background: var(--primary-color);
-  color: white;
 }
 
