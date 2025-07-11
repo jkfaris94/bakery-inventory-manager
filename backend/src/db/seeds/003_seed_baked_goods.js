@@ -13,9 +13,9 @@ exports.seed = async function (knex) {
   }
 
   await knex('baked_goods').insert([
-    { name: "Chocolate Chip Cookies", quantity: 0 },
-    { name: "Banana Bread", quantity: 0 },
-    { name: "Croissants", quantity: 0 },
+    { recipe_id: 1, name: "Chocolate Chip Cookies", quantity: 0 },
+    { recipe_id: 2, name: "Banana Bread", quantity: 0 },
+    { recipe_id: 3, name: "Croissants", quantity: 0 },
   ]);
 };
 

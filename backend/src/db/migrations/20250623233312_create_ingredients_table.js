@@ -7,7 +7,7 @@ exports.up = function(knex) {
     table.increments('id').primary();
     table.string('name').notNullable();
     table.float('quantity').notNullable().defaultTo(0);
-    table.string('unit').notNullable(); // e.g. grams, cups
+    table.string('unit').notNullable(); 
     table.timestamps(true, true);
   });
 };

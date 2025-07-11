@@ -5,13 +5,9 @@
 exports.up = function(knex) {
   return knex.schema.createTable('recipes', (table) => {
     table.increments('id').primary();
-    table.string('name'); // Optional descriptive name
-    table.integer('baked_good_id')
-         .unsigned()
-         .notNullable()
-         .references('id')
-         .inTable('baked_goods')
-         .onDelete('CASCADE');
+    table.string('title');
+    table.text('description').notNullable().defaultTo('');
+    table.string('image_url');
     table.timestamps(true, true);
   });
 };
