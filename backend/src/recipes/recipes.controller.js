@@ -27,16 +27,10 @@ async function read(req, res, next) {
 
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
-  // 1) Pull payload (supporting both { data:… } and top-level for Postman)
+  // Pull payload 
   const incoming = req.body.data || req.body;
-  const {
-    title,
-    image_url,
-    description,
-    baked_good_id: clientBgId,
-  } = incoming;
+  const { title, image_url, description, } = incoming;
 
-  // 2) Validation: title, image_url, and description
   if (!title) {
     return next({ status: 400, message: "Recipe must include a title" });
   }
@@ -48,34 +42,12 @@ async function create(req, res, next) {
   }
 
   try {
-    // 3) In one transaction, auto-create baked_good 
-    const newRecipeId = await knex.transaction(async (trx) => {
-      let bgId = clientBgId;
-
-      if (!bgId) {
-        // auto-create a baked_good row
-        const [insertedBgId] = await trx("baked_goods")
-          .insert({ name: title, quantity: 0 });
-        bgId = insertedBgId;
-      }
-
-      // insert the recipe pointing at that baked_good
-      const [insertedRecipeId] = await trx("recipes")
-        .insert({
-          title,
-          image_url,
-          description,
-          baked_good_id: bgId,
-        });
-
-      return insertedRecipeId;
+    const newRecipe = await knex.transaction(async (trx) => {
+      //  Insert recipe
+      const [recipeId] = await trx("recipes").insert({ title, image_url, description });
+      //  Return the full recipe row
+      return await trx("recipes").where({ id: recipeId }).first();
     });
-
-    // 4) Fetch and return the created recipe
-    const newRecipe = await knex("recipes")
-      .select("id", "title", "image_url", "description", "baked_good_id")
-      .where({ id: newRecipeId })
-      .first();
 
     res.status(201).json({ data: newRecipe });
   } catch (error) {
@@ -101,17 +73,15 @@ async function destroy(req, res, next) {
 
 // POST /recipes/:id/bake - Bake a recipe
 async function bake(req, res, next) {
-  const { id: recipe_id } = req.params;
+  const recipe_id = req.params.id;
   try {
-    // 1. Fetch recipe
-    const recipe = await knex("recipes")
-      .where({ id: recipe_id })
-      .first();
+    // Fetch recipe to ensure it exists
+    const recipe = await knex("recipes").where({ id: recipe_id }).first();
     if (!recipe) {
       return res.status(404).json({ error: "Recipe not found" });
     }
 
-    // 2. Get needed ingredients
+    // Get needed ingredients with their availability
     const neededIngredients = await knex("recipe_ingredients as ri")
       .join("ingredients as i", "ri.ingredient_id", "i.id")
       .where("ri.recipe_id", recipe_id)
@@ -122,7 +92,7 @@ async function bake(req, res, next) {
         "ri.quantity_needed"
       );
 
-    // 3. Check sufficiency
+    // Check if any are insufficient
     const insufficient = neededIngredients.filter(
       (i) => i.available < i.quantity_needed
     );
@@ -137,21 +107,20 @@ async function bake(req, res, next) {
       });
     }
 
-    // 4. Decrement ingredients & increment baked_good
+    // Perform the bake: decrement stocks and increment baked_goods qty
     const updatedGood = await knex.transaction(async (trx) => {
+      // Decrement each ingredient's quantity
       for (const ing of neededIngredients) {
         await trx("ingredients")
           .where({ id: ing.ingredient_id })
           .decrement("quantity", ing.quantity_needed);
       }
-
+      // Increment the baked_goods record identified by recipe_id
       await trx("baked_goods")
-        .where({ id: recipe.baked_good_id })
+        .where({ recipe_id })
         .increment("quantity", 1);
-
-      return trx("baked_goods")
-        .where({ id: recipe.baked_good_id })
-        .first();
+      // Return the updated baked_good
+      return trx("baked_goods").where({ recipe_id }).first();
     });
 
     res.status(200).json({ data: updatedGood });
