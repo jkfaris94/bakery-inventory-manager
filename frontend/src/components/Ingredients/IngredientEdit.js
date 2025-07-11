@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import IngredientEditForm from "./IngredientEditForm";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 export default function IngredientEdit() {
   const { ingredientId } = useParams();
   const navigate = useNavigate();
@@ -11,43 +13,54 @@ export default function IngredientEdit() {
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     // Fetch existing ingredient, destructure JSON envelope
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`)
+    fetch(`${API_BASE}/ingredients/${ingredientId}`, { signal })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then(({ data }) => setFormData(data))
       .catch((err) => {
+        if (err.name === "AbortError") return;
         console.error("Failed to load ingredient", err);
         toast.error("Failed to load ingredient");
       });
-  }, [ingredientId]);
+
+  return () => {
+    controller.abort();
+  };
+}, [ingredientId]);
 
   const handleChange = ({ target }) => {
     setFormData((fd) => ({ ...fd, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${ingredientId}`, {
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch(`${API_BASE}/ingredients/${ingredientId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: formData }),
-    })
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => Promise.reject(err));
-        return res.json();
-      })
-      .then(({ data }) => {
-        toast.success("Ingredient updated!");
-        navigate(`/ingredients/${ingredientId}`);
-      })
-      .catch((err) => {
-        console.error("Update failed", err);
-        toast.error(err.error || "Update failed");
-      });
-  };
+    });
+
+    if (!res.ok) {
+      // try to pull a server error message
+      const errPayload = await res.json().catch(() => ({}));
+      throw new Error(errPayload.error || "Update failed");
+    }
+
+    const { data } = await res.json();
+    toast.success("Ingredient updated!");
+    navigate(`/ingredients/${data.id}`);
+  } catch (err) {
+    console.error("Update failed", err);
+    toast.error(err.message);
+  }
+};
 
   const handleCancel = () => navigate(-1);
 
