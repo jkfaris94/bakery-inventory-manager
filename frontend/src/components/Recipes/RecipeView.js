@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import AddRecipeIngredientForm from "./AddRecipeIngredientForm";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 export default function RecipeView() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -15,9 +17,7 @@ export default function RecipeView() {
     async function load() {
       //fetch recipe by ID
       try {
-        const recipeRes = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`
-        );
+        const recipeRes = await fetch(`${API_BASE}/recipes/${id}`);
         if (!recipeRes.ok) throw new Error("Could not load recipe");
         
         const {
@@ -26,12 +26,12 @@ export default function RecipeView() {
         setRecipe(recipeData);
 
         //fetch ingredients for the recipe
-        const ingrRes = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
-        );
+        const ingrRes = await fetch(`${API_BASE}/recipes/${id}/ingredients`);
         if (!ingrRes.ok) throw new Error("Could not load ingredients");
+
         const ingrData = await ingrRes.json();
         setIngredients(ingrData);
+        
       } catch (err) {
         console.error(err);
         toast.error("Failed to load recipe");
@@ -44,7 +44,7 @@ export default function RecipeView() {
 
   // Bake the recipe
   const handleBake = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/bake`, {
+    fetch(`${API_BASE}/recipes/${id}/bake`, {
       method: "POST",
     })
       .then((res) => {
@@ -68,7 +68,7 @@ export default function RecipeView() {
   // Remove ingredient from recipe
   const handleRemove = (ingredientId) => {
     fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients/${ingredientId}`,
+      `${API_BASE}/recipes/${id}/ingredients/${ingredientId}`,
       { method: "DELETE" }
     )
       .then(() => {
@@ -103,7 +103,7 @@ export default function RecipeView() {
     if (!window.confirm("Are you sure you want to delete this recipe?")) return;
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`,
+        `${API_BASE}/recipes/${id}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("Delete failed");
