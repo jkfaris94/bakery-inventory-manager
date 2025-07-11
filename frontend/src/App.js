@@ -10,34 +10,37 @@ import RecipeCreate from "./components/Recipes/RecipesCreate";
 import IngredientCreate from "./components/Ingredients/IngredientCreate";
 import IngredientEdit from "./components/Ingredients/IngredientEdit";
 import { Toaster } from "react-hot-toast";
+import NotFound from "./components/shared/NotFound";
 
 
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          
-          <Route path="ingredients">
-            <Route index element={<IngredientsList />} />
-            <Route path="new" element={<IngredientCreate />} />
-            <Route path=":ingredientId" element={<IngredientView />} />
-            <Route path=":ingredientId/edit" element={<IngredientEdit />} />
-          </Route>
+  <Routes>
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
 
-          <Route path="recipes">
-            <Route index element={<RecipesList />} />
-            <Route path="new" element={<RecipeCreate />} />
-            <Route path=":id" element={<RecipeView />} />
-          </Route>
+      <Route path="ingredients">
+        <Route index element={<IngredientsList />} />
+        <Route path="new" element={<IngredientCreate />} />
+        <Route path=":ingredientId" element={<IngredientView />} />
+        <Route path=":ingredientId/edit" element={<IngredientEdit />} />
+      </Route>
 
-          <Route path="baked_goods" element={<BakedGoodsList />} />
-        </Route>
-      </Routes>
-      <Toaster position="top-center" />
-    </BrowserRouter>
+      <Route path="recipes">
+        <Route index element={<RecipesList />} />
+        <Route path="new" element={<RecipeCreate />} />
+        <Route path=":id" element={<RecipeView />} />
+      </Route>
+
+      <Route path="baked_goods" element={<BakedGoodsList />} />
+
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  </Routes>
+  <Toaster position="top-center" />
+</BrowserRouter>
   );
 }
 
