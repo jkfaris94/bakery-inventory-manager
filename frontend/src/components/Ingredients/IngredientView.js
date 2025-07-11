@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 export default function IngredientView() {
   const params = useParams();
   const id = params.id || params.ingredientId;
@@ -12,43 +14,59 @@ export default function IngredientView() {
 
   // Fetch ingredient and related recipes
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(({ data }) => setIngredient(data))
-      .catch((err) => {
-        console.error("Failed to load ingredient", err);
-        toast.error("Failed to load ingredient");
-      });
-      // Fetch related recipes
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}/recipes`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then(({ data }) => setRecipes(data))
-      .catch((err) => {
-        console.error("Failed to load related recipes", err);
-        toast.error("Failed to load related recipes");
-      });
-  }, [id]);
+  const controller = new AbortController();
+  const { signal } = controller;
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this ingredient?")) {
-      fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients/${id}`, { method: "DELETE" })
-        .then((res) => {
-          if (!res.ok) return res.json().then((data) => Promise.reject(data));
-          navigate("/ingredients");
-          toast("Ingredient deleted", { icon: "🗑️" });
-        })
-        .catch((err) => {
-          console.error("Failed to delete ingredient", err);
-          toast.error(err?.error || "Failed to delete ingredient");
-        });
+  // Fetch ingredient
+  fetch(`${API_BASE}/ingredients/${id}`, { signal })
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(({ data }) => setIngredient(data))
+    .catch((err) => {
+      if (err.name === "AbortError") return;
+      console.error("Failed to load ingredient", err);
+      toast.error("Failed to load ingredient");
+    });
+
+  // Fetch related recipes
+  fetch(`${API_BASE}/ingredients/${id}/recipes`, { signal })
+    .then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(({ data }) => setRecipes(data))
+    .catch((err) => {
+      if (err.name === "AbortError") return;
+      console.error("Failed to load related recipes", err);
+      toast.error("Failed to load related recipes");
+    });
+
+  // cleanup: cancel both fetches if component unmounts or id changes
+  return () => controller.abort();
+}, [id]);
+
+const handleDelete = async () => {
+  if (!window.confirm("Are you sure you want to delete this ingredient?")) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/ingredients/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || "Failed to delete ingredient");
     }
-  };
+    toast.success("Ingredient deleted", { icon: "🗑️" });
+    navigate("/ingredients");
+  } catch (err) {
+    console.error("Failed to delete ingredient", err);
+    toast.error(err.message);
+  }
+};
 
   if (!ingredient) return <p>Loading ingredient...</p>;
 
