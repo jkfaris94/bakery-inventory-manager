@@ -11,7 +11,13 @@ module.exports = {
     connection: {
       filename: './dev.sqlite3'
     },
-   useNullAsDefault: true, // 
+   useNullAsDefault: true, 
+   pool: {
+      afterCreate: (conn, done) => {
+        // <-- enable the PRAGMA for cascades
+        conn.run("PRAGMA foreign_keys = ON", done);
+      },
+    },
   migrations: {
     directory: "./src/db/migrations", // 
   },
