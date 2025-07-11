@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import IngredientForm from "./IngredientForm";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
 export default function IngredientCreate() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,7 +25,7 @@ export default function IngredientCreate() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/ingredients`,
+        `${API_BASE}/ingredients`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
