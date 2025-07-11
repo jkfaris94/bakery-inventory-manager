@@ -76,54 +76,8 @@ header a, footer a {
   margin-bottom: 0.5rem;
 }
 
-/* ================= Forms ================= */
-/* .recipe-form,
-.ingredient-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
-  max-width: 400px;
-  margin-top: var(--spacing);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  margin-bottom: 0.25rem;
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  background: var(--secondary-color);
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 1rem;
-} */
-
 button:hover {
   background: var(--primary-color);
   color: white;
 }
 
-/* ================= Lists & Cards ================= */
-/* .list {
-  list-style: none;
-  margin-top: var(--spacing);
-}
-
-.list-item {
-  padding: var(--spacing);
-  border-bottom: 1px solid #ddd;
-} */
