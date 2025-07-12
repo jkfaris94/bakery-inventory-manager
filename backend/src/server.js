@@ -1,21 +1,27 @@
-const express = require("express");
-const knex = require("./db/connection");
-const { PORT = 5001 } = process.env;
-
+require("dotenv").config();
 const app = require("./app");
+const knex = require("./db/connection");
 
-app.use(express.json());
-//GET "/ingredients"
-app.get("/ingredients", async (req, res) => {
+const PORT = process.env.PORT || 5001;
+
+async function start() {
   try {
-    const ingredients = await knex("ingredients").select("*");
-    res.json(ingredients);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch ingredients" });
-  }
-});
+    // 1) Run any pending migrations
+    await knex.migrate.latest();
+    console.log("✅ Migrations are up to date");
 
-app.listen(PORT, () => {
-  console.log(`Listening on Port ${PORT}!`);
-});
+    // 2) Seed initial data
+    await knex.seed.run();
+    console.log("✅ Seeds are complete");
+
+    // 3) Start the server
+    app.listen(PORT, () => {
+      console.log(`Listening on Port ${PORT}!`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1);
+  }
+}
+
+start();
