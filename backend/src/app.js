@@ -33,4 +33,9 @@ app.use(notFound);
 // error handler (returns JSON { error: … })
 app.use(errorHandler);
 
+//health check endpoint
+app.get("/", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 module.exports = app;
