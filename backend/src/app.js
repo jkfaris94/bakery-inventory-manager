@@ -28,7 +28,7 @@ app.use("/baked_goods", bakedGoodsRouter);
 app.use("/recipes", recipesRouter);
 
 // Serve  built React app (in production)
-const buildPath = path.join(__dirname, "../frontend/build");
+const buildPath = path.join(__dirname, "../../frontend/build");
 app.use(express.static(buildPath));
 app.get("/*", (req, res, next) => {
   // let API routes fall through
