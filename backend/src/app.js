@@ -27,15 +27,27 @@ app.use("/ingredients", ingredientsRouter);
 app.use("/baked_goods", bakedGoodsRouter);
 app.use("/recipes", recipesRouter);
 
-// catch-all 404 handler
-app.use(notFound);
-
-// error handler (returns JSON { error: … })
-app.use(errorHandler);
+// Serve  built React app (in production)
+const buildPath = path.join(__dirname, "../frontend/build");
+app.use(express.static(buildPath));
+app.get("/*", (req, res, next) => {
+  // let API routes fall through
+  if (req.path.startsWith("/ingredients") ||
+      req.path.startsWith("/baked_goods") ||
+      req.path.startsWith("/recipes")) {
+    return next();
+  }
+  res.sendFile(path.join(buildPath, "index.html"));
+});
 
 //health check endpoint
 app.get("/", (req, res) => {
   res.json({ status: "ok" });
 });
+// catch-all 404 handler
+app.use(notFound);
+// error handler (returns JSON { error: … })
+app.use(errorHandler);
+
 
 module.exports = app;
