@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
+
 export default function RecipesList() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
   // GET /recipes
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes`)
+    fetch(`${API_BASE}/recipes`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load");
         return res.json();

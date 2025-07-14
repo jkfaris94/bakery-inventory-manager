@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
+
 export default function RecipeCreate() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ 
@@ -16,7 +18,7 @@ export default function RecipeCreate() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes`, {
+    fetch(`${API_BASE}/recipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: formData }),

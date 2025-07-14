@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import BakedGoodEditForm from "./BakedGoodEditForm";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
 
 export default function BakedGoodsList() {
   const [goods, setGoods] = useState([]);
