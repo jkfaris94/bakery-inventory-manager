@@ -27,10 +27,10 @@ async function read(req, res, next) {
 
 // POST /recipes - Create a new recipe
 async function create(req, res, next) {
-  // Pull payload 
-  const incoming = req.body.data || req.body;
-  const { title, image_url, description, } = incoming;
+  const { data = {} } = req.body;
+  const { title, image_url, description } = data;
 
+  // 1) Validate
   if (!title) {
     return next({ status: 400, message: "Recipe must include a title" });
   }
@@ -42,21 +42,27 @@ async function create(req, res, next) {
   }
 
   try {
-    const newRecipe = await knex.transaction(async (trx) => {
-      //  Insert recipe
-      const [recipeId] = await trx("recipes").insert({ title, image_url, description });
+    // 2) Insert recipe and get its ID
+    const insertResult = await knex("recipes")
+      .insert({ title, image_url, description });
+    // normalize whether PG returns a number or array
+    const recipeId = Array.isArray(insertResult)
+      ? insertResult[0]
+      : insertResult;
 
-      // auto-create its baked_good at quantity = 0
-      await trx("baked_goods").insert({
-        recipe_id: recipeId,
-        name:      title,
-        quantity:  0,
-      });
-
-      //  Return the full recipe row
-      return await trx("recipes").where({ id: recipeId }).first();
+    // 3) Auto-create its baked_good record
+    await knex("baked_goods").insert({
+      recipe_id: recipeId,
+      name:      title,
+      quantity:  0,
     });
 
+    // 4) Fetch the newly-created recipe
+    const newRecipe = await knex("recipes")
+      .where({ id: recipeId })
+      .first();
+
+    // 5) Return it under { data }
     res.status(201).json({ data: newRecipe });
   } catch (error) {
     next(error);
