@@ -7,7 +7,7 @@ exports.up = function(knex) {
     table.increments('id').primary();
     table.string('title');
     table.text('description').notNullable().defaultTo('');
-    table.string('image_url');
+    table.text('image_url');
     table.timestamps(true, true);
   });
 };
