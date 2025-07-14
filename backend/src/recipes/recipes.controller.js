@@ -43,29 +43,24 @@ async function create(req, res, next) {
 
   try {
     // 2) Insert recipe and get its ID
-    const insertResult = await knex("recipes")
+    const [recipeId] = await knex("recipes")
       .insert({ title, image_url, description });
-    // normalize whether PG returns a number or array
-    const recipeId = Array.isArray(insertResult)
-      ? insertResult[0]
-      : insertResult;
 
-    // 3) Auto-create its baked_good record
+    // 3) Create the baked_good record referring to that numeric ID
     await knex("baked_goods").insert({
-      recipe_id: recipeId,
+      recipe_id: recipeId,  
       name:      title,
       quantity:  0,
     });
 
-    // 4) Fetch the newly-created recipe
+    // 4) Fetch and return the new recipe
     const newRecipe = await knex("recipes")
       .where({ id: recipeId })
       .first();
 
-    // 5) Return it under { data }
-    res.status(201).json({ data: newRecipe });
+    return res.status(201).json({ data: newRecipe });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 }
 
