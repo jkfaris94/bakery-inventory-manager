@@ -39,7 +39,7 @@ const buildPath = path.join(__dirname, "../../frontend/build");
 app.use(express.static(buildPath));
 
 // Catch-all for SPA client-side routing on GET requests
-app.get("*", (req, res, next) => {
+app.get("/*", (req, res, next) => {
   const prefix = req.path.split("/")[1];
   if (["ingredients", "recipes", "baked_goods", "health"].includes(prefix)) {
     return next();
