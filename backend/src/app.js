@@ -20,7 +20,7 @@ if (process.env.LOG_LEVEL === "info") {
   app.use(morgan("dev"));
 }
 
-// CORS + JSON parsing
+// CORS + JSON 
 app.use(cors());
 app.use(express.json());
 
@@ -28,8 +28,6 @@ app.use(express.json());
 app.use("/ingredients", ingredientsRouter);
 app.use("/baked_goods", bakedGoodsRouter);
 app.use("/recipes", recipesRouter);
-
-// Health check endpoint
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
@@ -40,10 +38,22 @@ app.use(express.static(buildPath));
 
 // Catch-all for SPA client-side routing on GET requests
 app.get("/*", (req, res, next) => {
-  const prefix = req.path.split("/")[1];
-  if (["ingredients", "recipes", "baked_goods", "health"].includes(prefix)) {
+  // only for GET requests…
+  if (req.method !== "GET") return next();
+
+  // …that the client expects HTML…
+  if (!req.headers.accept || !req.headers.accept.includes("text/html")) {
     return next();
   }
+
+  // …and whose path prefix isn’t one of your API mounts:
+  const prefix = req.path.split("/")[1];
+  const apiPrefixes = ["ingredients", "baked_goods", "recipes", "health"];
+  if (apiPrefixes.includes(prefix)) {
+    return next();
+  }
+
+  // Otherwise send React’s index.html
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
