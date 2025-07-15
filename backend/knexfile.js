@@ -63,8 +63,8 @@ module.exports = {
     },
     debug: true,
     pool: {
-      min: 2,
-      max: 10
+      min: 1,
+      max: 5
     },
     migrations: {
       directory: "src/db/migrations",   
