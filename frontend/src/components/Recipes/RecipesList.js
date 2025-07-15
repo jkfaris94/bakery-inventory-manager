@@ -8,23 +8,28 @@ export default function RecipesList() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
-  // GET /recipes
+  // GET /recipes with AbortController
   useEffect(() => {
-    fetch(`${API_BASE}/recipes`)
+    const abortController = new AbortController();
+    fetch(`${API_BASE}/recipes`, { signal: abortController.signal })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load");
         return res.json();
       })
       .then(({ data }) => setRecipes(data))
-      .catch(() => toast.error("Failed to load recipes"));
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          toast.error("Failed to load recipes");
+        }
+      });
+    return () => abortController.abort();
   }, []);
 
   // DELETE /recipes/:id
   const handleDelete = (id) => {
-    // ask for confirmation before deleting
-  const ok = window.confirm("Are you sure you want to delete this recipe?");
-  if (!ok) return; 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/recipes/${id}`, {
+    const ok = window.confirm("Are you sure you want to delete this recipe?");
+    if (!ok) return;
+    fetch(`${API_BASE}/recipes/${id}`, {
       method: "DELETE",
     })
       .then((res) => {
