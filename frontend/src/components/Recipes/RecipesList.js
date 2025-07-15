@@ -8,7 +8,7 @@ export default function RecipesList() {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
 
-  // GET /recipes with AbortController
+  // GET /recipes
   useEffect(() => {
     const abortController = new AbortController();
     fetch(`${API_BASE}/recipes`, { signal: abortController.signal })

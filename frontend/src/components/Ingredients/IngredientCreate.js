@@ -56,6 +56,7 @@ export default function IngredientCreate() {
             formData={formData}
             onChange={handleChange}
             onSubmit={handleSubmit}
+            submitLabel="Create"
           />
         </div>
       </div>

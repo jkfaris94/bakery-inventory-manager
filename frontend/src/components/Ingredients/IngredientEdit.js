@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import IngredientEditForm from "./IngredientEditForm";
+import IngredientForm from "./IngredientForm";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
 
@@ -72,11 +72,12 @@ export default function IngredientEdit() {
       <h2 className="text-center mb-4">Edit Ingredient</h2>
       <div className="row justify-content-center">
         <div className="col-md-6 col-lg-4">
-          <IngredientEditForm
+          <IngredientForm
             formData={formData}
             onChange={handleChange}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
+            submitLabel="Save"
           />
         </div>
       </div>

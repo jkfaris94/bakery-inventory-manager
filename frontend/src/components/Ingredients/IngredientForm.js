@@ -1,12 +1,20 @@
 import React from "react";
 
-export default function IngredientForm({ formData = {}, onChange, onSubmit }) {
-  const { name = "", quantity = "", unit = "" } = formData;
+export default function IngredientForm({
+  formData = { name: "", quantity: "", unit: "" },
+  onChange,
+  onSubmit,
+  onCancel,          
+  submitLabel = "Create", 
+}) {
+  const { name, quantity, unit } = formData;
 
   return (
     <form onSubmit={onSubmit} className="row g-3">
       <div className="col-12">
-        <label htmlFor="name" className="form-label">Name</label>
+        <label htmlFor="name" className="form-label small">
+          Name
+        </label>
         <input
           id="name"
           name="name"
@@ -19,7 +27,9 @@ export default function IngredientForm({ formData = {}, onChange, onSubmit }) {
       </div>
 
       <div className="col-6">
-        <label htmlFor="quantity" className="form-label">Quantity</label>
+        <label htmlFor="quantity" className="form-label small">
+          Quantity
+        </label>
         <input
           id="quantity"
           name="quantity"
@@ -32,7 +42,9 @@ export default function IngredientForm({ formData = {}, onChange, onSubmit }) {
       </div>
 
       <div className="col-6">
-        <label htmlFor="unit" className="form-label">Unit</label>
+        <label htmlFor="unit" className="form-label small">
+          Unit
+        </label>
         <input
           id="unit"
           name="unit"
@@ -45,8 +57,17 @@ export default function IngredientForm({ formData = {}, onChange, onSubmit }) {
       </div>
 
       <div className="col-12 text-end">
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn btn-secondary btn-sm me-2"
+          >
+            Cancel
+          </button>
+        )}
         <button type="submit" className="btn btn-primary btn-sm">
-          Create
+          {submitLabel}
         </button>
       </div>
     </form>
