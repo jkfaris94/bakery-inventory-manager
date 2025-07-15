@@ -32,21 +32,11 @@ async function create(req, res, next) {
     return res.status(400).json({ error: "Missing required field: name" });
   }
   try {
-    console.log('Inserting ingredient:', { name: name.trim(), unit, quantity });
-    const result = await knex("ingredients").insert(
-      { name: name.trim(), unit, quantity },
-      ['id'] // Explicitly return id
-    );
-    console.log('Insert result:', result);
-    const newId = Array.isArray(result) ? result[0].id : result.id;
+    const [newId] = await knex("ingredients").insert({ name: name.trim(), unit, quantity });
     const newItem = await knex("ingredients").where({ id: newId }).first();
-    if (!newItem) {
-      return res.status(404).json({ error: "Ingredient not found after creation" });
-    }
     return res.status(201).json({ data: newItem });
   } catch (error) {
-    console.error('Error creating ingredient:', error);
-    return res.status(500).json({ error: error.message || 'Failed to create ingredient' });
+    next(error);
   }
 }
 
