@@ -7,6 +7,7 @@ A full‑stack bakery inventory management application built with React, React R
 ## 📂 Repository
 
 **GitHub:** [jkfaris94](https://github.com/jkfaris94/bakery-inventory-manager.git)
+**Source README:** [Starter Repo README](https://github.com/Thinkful-Ed/starter-bakery-inventory-manager/blob/main/README.md)
 
 ## 🏠 Live Demo
 * launch backend to start database then view frontend 
@@ -28,10 +29,8 @@ A full‑stack bakery inventory management application built with React, React R
   * [Migrations & Seeding](#migrations--seeding)
   * [Running Tests](#running-tests)
   * [Running the App](#running-the-app)
-* [Project Structure](#project-structure)
 * [User Stories](#user-stories)
 * [Contributing](#contributing)
-* [License](#license)
 
 \--
 
@@ -81,7 +80,7 @@ LOG_LEVEL=info
 ```bash
 # Clone
 git clone https://github.com/jkfaris94/bakery-inventory-manager.git
-cd YOUR_REPO_NAME
+cd bakery-inventory-manager
 
 # Install deps for both projects
 npm install          
