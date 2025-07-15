@@ -6,16 +6,16 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const errorHandler = require("./errors/errorHandler");
-const notFound = require("./errors/notFound");
+const notFound    = require("./errors/notFound");
 
-//import routers
+// import routers
 const ingredientsRouter = require("./ingredients/ingredients.router");
-const bakedGoodsRouter = require("./baked_goods/baked_goods.router");
-const recipesRouter = require("./recipes/recipes.router");
+const bakedGoodsRouter  = require("./baked_goods/baked_goods.router");
+const recipesRouter     = require("./recipes/recipes.router");
 
 const app = express();
 
-//logging 
+// logging 
 if (process.env.LOG_LEVEL === "info") {
   app.use(morgan("dev"));
 }
@@ -24,33 +24,27 @@ if (process.env.LOG_LEVEL === "info") {
 app.use(cors());
 app.use(express.json());
 
-// mount API routers
-app.use("/ingredients", ingredientsRouter);
-app.use("/baked_goods", bakedGoodsRouter);
-app.use("/recipes", recipesRouter);
+// 1) Build an “api” router and mount all your endpoints onto it:
+const api = express.Router();
+api.get("/health", (req, res) => res.json({ status: "ok" }));
+api.use("/ingredients", ingredientsRouter);
+api.use("/baked_goods",  bakedGoodsRouter);
+api.use("/recipes",     recipesRouter);
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
+// 2) Mount the API under /api
+app.use("/api", api);
 
-// Serve  built React app (in production)
+// 3) Serve your React build
 const buildPath = path.join(__dirname, "../../frontend/build");
 app.use(express.static(buildPath));
 
-// Catch-all for SPA client-side routing on GET requests
-app.get("/*", (req, res, next) => {
-  const prefix = req.path.split("/")[1];
-  if (["ingredients", "recipes", "baked_goods", "health"].includes(prefix)) {
-    return next();
-  }
+// 4) Any GET that isn’t /api/* should return index.html so React Router can handle it
+app.get("/*", (req, res) => {
   res.sendFile(path.join(buildPath, "index.html"));
 });
 
-// catch-all 404 handler
+// 5) Finally, real 404 + error handlers
 app.use(notFound);
-// error handler (returns JSON { error: … })
 app.use(errorHandler);
-
 
 module.exports = app;
