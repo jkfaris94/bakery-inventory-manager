@@ -28,14 +28,50 @@ async function read(req, res, next) {
 async function create(req, res, next) {
   const { data = {} } = req.body;
   const { name, unit = "", quantity = 0 } = data;
-  if (!name) {
+
+  // 1) Validate
+  if (!name || !name.trim()) {
     return res.status(400).json({ error: "Missing required field: name" });
   }
   try {
-    const [newId] = await knex("ingredients").insert({ name: name.trim(), unit, quantity });
-    const newItem = await knex("ingredients").where({ id: newId }).first();
+    // 2) Insert & capture any return type from knex.insert()
+    const insertResult = await knex("ingredients").insert({
+      name: name.trim(),
+      unit: unit.trim(),
+      quantity,
+    });
+
+    // 3) Normalize to plain integer ID
+    let newId;
+    if (Array.isArray(insertResult) && typeof insertResult[0] === "number") {
+      newId = insertResult[0];
+    } else if (typeof insertResult === "number") {
+      newId = insertResult;
+    } else if (insertResult && insertResult.command) {
+      // PG driver returns a result object
+      const row = await knex("ingredients")
+        .select("id")
+        .orderBy("id", "desc")
+        .first();
+      newId = row.id;
+    } else {
+      // Fallback for unexpected shapes
+      const row = await knex("ingredients")
+        .select("id")
+        .orderBy("id", "desc")
+        .first();
+      newId = row.id;
+    }
+
+    // 4) Fetch the newly created record
+    const newItem = await knex("ingredients")
+      .where({ id: newId })
+      .first();
+
+    // 5) Return under { data }
     return res.status(201).json({ data: newItem });
   } catch (error) {
+    console.error("💥 Error in ingredients.create:", error);
     next(error);
   }
 }
