@@ -207,7 +207,7 @@ export default function RecipeView() {
             recipeId={id}
             onAdd={() => {
               fetch(
-                `${process.env.REACT_APP_API_BASE_URL}/recipes/${id}/ingredients`
+                `${API_BASE}/recipes/${id}/ingredients`
               )
                 .then((res) => res.json())
                 .then(setIngredients);
