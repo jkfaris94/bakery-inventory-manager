@@ -60,7 +60,8 @@ async function create(req, res, next) {
 
     return res.status(201).json({ data: newRecipe });
   } catch (error) {
-    return next(error);
+    console.error("💥 Error in recipes.create:", error);
+    next(error);
   }
 }
 

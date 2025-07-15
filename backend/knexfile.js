@@ -61,6 +61,7 @@ module.exports = {
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false }
     },
+    debug: true,
     pool: {
       min: 2,
       max: 10
