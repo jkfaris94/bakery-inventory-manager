@@ -42,18 +42,36 @@ async function create(req, res, next) {
   }
 
   try {
-    // 2) Insert recipe and get its ID
-    const [recipeId] = await knex("recipes")
+    // Insert recipe and get its ID
+    const insertResult = await knex("recipes")
       .insert({ title, image_url, description });
 
-    // 3) Create the baked_good record referring to that numeric ID
+    // Normalize to a simple integer ID
+    let recipeId;
+    if (Array.isArray(insertResult)) {
+      recipeId = insertResult[0];            
+    } else if (typeof insertResult === "number") {
+      recipeId = insertResult;               
+    } else if (insertResult && insertResult.rowCount) {
+      
+      // fallback: grab the last inserted ID
+      const row = await knex("recipes")
+        .select("id")
+        .orderBy("id", "desc")
+        .first();
+      recipeId = row.id;
+    } else {
+      throw new Error(`Unexpected insert result: ${JSON.stringify(insertResult)}`);
+    }
+
+    // Create the baked_good record referring to that numeric ID
     await knex("baked_goods").insert({
       recipe_id: recipeId,  
       name:      title,
       quantity:  0,
     });
 
-    // 4) Fetch and return the new recipe
+    // Fetch and return the new recipe
     const newRecipe = await knex("recipes")
       .where({ id: recipeId })
       .first();
