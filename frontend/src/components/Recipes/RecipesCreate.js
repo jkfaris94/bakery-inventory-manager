@@ -9,20 +9,29 @@ export default function RecipeCreate() {
   const navigate = useNavigate();
 
   const handleCreate = async (data) => {
-    try {
-      const response = await fetch(`${API_BASE}/recipes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data }),
-      });
-      if (!response.ok) throw await response.json();
-      const { data: newRecipe } = await response.json();
-      toast.success("Recipe created!");
-      navigate(`/recipes/${newRecipe.id}`);
-    } catch (err) {
-      toast.error(err.error || "Failed to create recipe");
-    }
-  };
+  const abortController = new AbortController();
+
+  try {
+    const response = await fetch(`${API_BASE}/recipes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+      signal: abortController.signal,
+    });
+
+    if (!response.ok) throw await response.json();
+
+    const { data: newRecipe } = await response.json();
+    toast.success("Recipe created!");
+    navigate(`/recipes/${newRecipe.id}`);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    console.error("Failed to create recipe", err);
+    toast.error(err.error || "Failed to create recipe");
+  }
+
+  return () => abortController.abort(); // Optional cleanup
+};
 
   return (
     <RecipeForm
