@@ -106,23 +106,6 @@ export default function BakedGoodsList() {
     return () => abortController.abort();
   };
 
-  // DELETE /baked_goods/:id
-  // const handleDelete = (id) => {
-  //   fetch(`${API_BASE}/baked_goods/${id}`, { method: "DELETE" })
-  //     .then((res) => {
-  //       if (!res.ok) throw new Error();
-  //       return res.json();
-  //     })
-  //     .then(({ data }) => {
-  //       setGoods((prev) => prev.filter((g) => g.id !== id));
-  //       toast("Deleted baked good.", { icon: "🗑️" });
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //       toast.error("Failed to delete baked good");
-  //     });
-  // };
-
   const handleEditClick = (g) => {
     setEditingId(g.id);
     setEditForm({ name: g.name, quantity: g.quantity });
@@ -133,26 +116,34 @@ export default function BakedGoodsList() {
   };
 
   const handleEditSubmit = (e) => {
-    e.preventDefault();
-    fetch(`${API_BASE}/baked_goods/${editingId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editForm),
+  e.preventDefault();
+
+  const abortController = new AbortController();
+
+  fetch(`${API_BASE}/baked_goods/${editingId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(editForm),
+    signal: abortController.signal,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error();
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then(({ data }) => {
-        setGoods((prev) => prev.map((g) => (g.id === data.id ? data : g)));
-        setEditingId(null);
-        toast.success("Baked good updated!");
-      })
-      .catch((err) => {
+    .then(({ data }) => {
+      setGoods((prev) => prev.map((g) => (g.id === data.id ? data : g)));
+      setEditingId(null);
+      toast.success("Baked good updated!");
+    })
+    .catch((err) => {
+      if (err.name !== "AbortError") {
         console.error(err);
         toast.error("Update failed.");
-      });
-  };
+      }
+    });
+
+  return () => abortController.abort(); 
+};
 
   return (
     <div className="container py-4">
