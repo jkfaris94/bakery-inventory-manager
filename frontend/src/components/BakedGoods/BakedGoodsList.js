@@ -22,7 +22,7 @@ export default function BakedGoodsList() {
     return [];
   };
 
-  // Fetch baked goods when page mounts or location changes
+  // Fetch baked goods 
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -47,23 +47,24 @@ export default function BakedGoodsList() {
 
   // Fetch all recipes for bake dropdown
   useEffect(() => {
-    let isMounted = true;
-    fetch(`${API_BASE}/recipes`)
+    const abortController = new AbortController();
+
+    fetch(`${API_BASE}/recipes`, { signal: abortController.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
       .then((json) => {
-        if (isMounted) setRecipes(unwrap(json));
+        setRecipes(unwrap(json));
       })
       .catch((err) => {
-        console.error(err);
-        if (isMounted) setRecipes([]);
-        toast.error("Failed to load recipes");
+        if (err.name !== "AbortError") {
+          copnsole.error(err);
+          setRecipes([]);
+          toast.error("Failed to load recipes");
+        }
       });
-    return () => {
-      isMounted = false;
-    };
+    return () => abortController.abort();
   }, []);
 
   // POST /recipes/:id/bake
