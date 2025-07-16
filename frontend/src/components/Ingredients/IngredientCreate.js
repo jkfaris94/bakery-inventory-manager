@@ -22,30 +22,33 @@ export default function IngredientCreate() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(
-        `${API_BASE}/ingredients`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          // wrap under `data` to match backend
-          body: JSON.stringify({ data: formData }),
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json();
-        throw err;
-      }
-      const { data } = await res.json();
-      toast.success("Ingredient created!");
-      // go to its detail page
-      navigate(`/ingredients/${data.id}`);
-    } catch (err) {
-      console.error("Failed to create ingredient", err);
-      toast.error(err.error || "Failed to create ingredient");
+  e.preventDefault();
+  const abortController = new AbortController();
+
+  try {
+    const res = await fetch(`${API_BASE}/ingredients`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: formData }),
+      signal: abortController.signal,
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw err;
     }
-  };
+
+    const { data } = await res.json();
+    toast.success("Ingredient created!");
+    navigate(`/ingredients/${data.id}`);
+  } catch (err) {
+    if (err.name === "AbortError") return;
+    console.error("Failed to create ingredient", err);
+    toast.error(err?.error || "Failed to create ingredient");
+  }
+
+  return () => abortController.abort(); 
+};
 
   return (
     <div className="container py-4">
