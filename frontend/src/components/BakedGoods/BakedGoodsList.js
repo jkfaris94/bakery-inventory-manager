@@ -59,7 +59,7 @@ export default function BakedGoodsList() {
       })
       .catch((err) => {
         if (err.name !== "AbortError") {
-          copnsole.error(err);
+          console.error(err);
           setRecipes([]);
           toast.error("Failed to load recipes");
         }
@@ -73,19 +73,29 @@ export default function BakedGoodsList() {
       toast.error("Please select a recipe to bake");
       return;
     }
-    fetch(`${API_BASE}/recipes/${selectedRecipeId}/bake`, { method: "POST" })
+
+    const abortController = new AbortController();
+
+    fetch(`${API_BASE}/recipes/${selectedRecipeId}/bake`, { 
+      method: "POST",
+      signal: abortController.signal, 
+    })
       .then((res) => {
-        if (!res.ok)
+        if (!res.ok){
           return res.json().then((err) => Promise.reject(err));
+        }
         return res.json();
       })
       .then(({ data, message }) => {
         toast.success(message || "Baked successfully!");
-        return fetch(`${API_BASE}/baked_goods`);
+        return fetch(`${API_BASE}/baked_goods`, { 
+          signal: abortController.signal, 
+        });
       })
       .then((res) => res.json())
       .then((json) => setGoods(unwrap(json)))
       .catch((error) => {
+        if (error.name === "AbortError") return; 
         console.error(error);
         if (error?.missing) {
           toast.error("Not enough ingredients to bake!");
@@ -93,6 +103,7 @@ export default function BakedGoodsList() {
           toast.error("Failed to bake");
         }
       });
+    return () => abortController.abort();
   };
 
   // DELETE /baked_goods/:id
