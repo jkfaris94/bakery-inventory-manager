@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   // Local state for all available ingredients
@@ -7,18 +8,29 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   const [quantity, setQuantity] = useState("");
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`)
+    const abortController = new AbortController();
+
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
+      signal: abortController.signal,
+    })
       .then((res) => res.json())
       .then((json) => {
-        // Expecting { data: [...] }
         const list = json.data;
         setIngredients(Array.isArray(list) ? list : []);
       })
-      .catch(console.error);
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          toast.error("Failed to load ingredients.");
+        }
+      });
+
+    return () => abortController.abort();
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const selected = ingredients.find((i) => i.id === Number(selectedId));
     if (!selected) return;
 
@@ -35,7 +47,9 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
       }
     )
       .then((res) => {
-        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        if (!res.ok) {
+          return res.json().then((err) => Promise.reject(err));
+        }
         return res.json();
       })
       .then(() => {
@@ -43,7 +57,10 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
         setSelectedId("");
         setQuantity("");
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        toast.error(err?.error || "Failed to add ingredient.");
+      });
   };
 
   return (
