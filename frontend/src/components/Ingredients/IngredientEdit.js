@@ -64,7 +64,7 @@ export default function IngredientEdit() {
     toast.error(err.message);
   }
 
-  return () => abortController.abort(); // Optional in this context
+  return () => abortController.abort(); 
 };
 
   const handleCancel = () => navigate(-1);
