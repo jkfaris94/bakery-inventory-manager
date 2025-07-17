@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
+
 export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   // Local state for all available ingredients
   const [ingredients, setIngredients] = useState([]);
@@ -10,7 +12,7 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   useEffect(() => {
     const abortController = new AbortController();
 
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/ingredients`, {
+    fetch(`${API_BASE}/ingredients`, {
       signal: abortController.signal,
     })
       .then((res) => res.json())
@@ -29,39 +31,45 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const selected = ingredients.find((i) => i.id === Number(selectedId));
-    if (!selected) return;
+  const selected = ingredients.find((i) => i.id === Number(selectedId));
+  if (!selected) return;
 
-    fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/recipes/${recipeId}/ingredients`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ingredient_id: selected.id,
-          quantity_needed: Number(quantity),
-          unit: selected.unit,
-        }),
+  const abortController = new AbortController();
+
+  fetch(
+    `${API_BASE}/recipes/${recipeId}/ingredients`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ingredient_id: selected.id,
+        quantity_needed: Number(quantity),
+        unit: selected.unit,
+      }),
+      signal: abortController.signal,
+    }
+  )
+    .then((res) => {
+      if (!res.ok) {
+        return res.json().then((err) => Promise.reject(err));
       }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((err) => Promise.reject(err));
-        }
-        return res.json();
-      })
-      .then(() => {
-        onAdd();
-        setSelectedId("");
-        setQuantity("");
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error(err?.error || "Failed to add ingredient.");
-      });
-  };
+      return res.json();
+    })
+    .then(() => {
+      onAdd();
+      setSelectedId("");
+      setQuantity("");
+    })
+    .catch((err) => {
+      if (err.name === "AbortError") return;
+      console.error(err);
+      toast.error(err?.error || "Failed to add ingredient.");
+    });
+
+  return () => abortController.abort(); // Optional
+};
 
   return (
     <div className="row justify-content-center mb-4">
