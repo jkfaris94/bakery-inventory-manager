@@ -40,15 +40,17 @@ export default function IngredientEdit() {
   const handleSubmit = async (e) => {
   e.preventDefault();
 
+  const abortController = new AbortController();
+
   try {
     const res = await fetch(`${API_BASE}/ingredients/${ingredientId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data: formData }),
+      signal: abortController.signal,
     });
 
     if (!res.ok) {
-      // try to pull a server error message
       const errPayload = await res.json().catch(() => ({}));
       throw new Error(errPayload.error || "Update failed");
     }
@@ -57,9 +59,12 @@ export default function IngredientEdit() {
     toast.success("Ingredient updated!");
     navigate(`/ingredients/${data.id}`);
   } catch (err) {
+    if (err.name === "AbortError") return;
     console.error("Update failed", err);
     toast.error(err.message);
   }
+
+  return () => abortController.abort(); // Optional in this context
 };
 
   const handleCancel = () => navigate(-1);
