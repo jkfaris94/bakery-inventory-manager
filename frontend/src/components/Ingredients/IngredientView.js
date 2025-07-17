@@ -52,20 +52,28 @@ const handleDelete = async () => {
     return;
   }
 
+  const abortController = new AbortController();
+
   try {
     const res = await fetch(`${API_BASE}/ingredients/${id}`, {
       method: "DELETE",
+      signal: abortController.signal,
     });
+
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}));
       throw new Error(errData.error || "Failed to delete ingredient");
     }
+
     toast.success("Ingredient deleted", { icon: "🗑️" });
     navigate("/ingredients");
   } catch (err) {
+    if (err.name === "AbortError") return;
     console.error("Failed to delete ingredient", err);
     toast.error(err.message);
   }
+
+  return () => abortController.abort(); 
 };
 
   if (!ingredient) return <p>Loading ingredient...</p>;
