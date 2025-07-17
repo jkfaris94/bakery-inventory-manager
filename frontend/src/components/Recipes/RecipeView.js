@@ -14,70 +14,90 @@ export default function RecipeView() {
 
   // Fetch recipe and ingredients
   useEffect(() => {
+    const abortController = new AbortController();
+    
     async function load() {
-      //fetch recipe by ID
-      try {
-        const recipeRes = await fetch(`${API_BASE}/recipes/${id}`);
-        if (!recipeRes.ok) throw new Error("Could not load recipe");
-        
-        const {
-          data: recipeData
-        } = await recipeRes.json();
-        setRecipe(recipeData);
+    try {
+      const recipeRes = await fetch(`${API_BASE}/recipes/${id}`, {
+        signal: abortController.signal,
+      });
+      if (!recipeRes.ok) throw new Error("Could not load recipe");
 
-        //fetch ingredients for the recipe
-        const ingrRes = await fetch(`${API_BASE}/recipes/${id}/ingredients`);
-        if (!ingrRes.ok) throw new Error("Could not load ingredients");
+      const { data: recipeData } = await recipeRes.json();
+      setRecipe(recipeData);
 
-        const ingrData = await ingrRes.json();
-        setIngredients(ingrData);
-        
-      } catch (err) {
+      const ingrRes = await fetch(`${API_BASE}/recipes/${id}/ingredients`, {
+        signal: abortController.signal,
+      });
+      if (!ingrRes.ok) throw new Error("Could not load ingredients");
+
+      const ingrData = await ingrRes.json();
+      setIngredients(ingrData);
+    } catch (err) {
+      if (err.name !== "AbortError") {
         console.error(err);
         toast.error("Failed to load recipe");
       }
     }
-    load();
-  }, [id]);
+  }
+
+  load();
+  return () => abortController.abort();
+}, [id]);
 
   const recipeTitle = recipe?.title ?? `Recipe ${id}`;
 
   // Bake the recipe
-  const handleBake = () => {
-    fetch(`${API_BASE}/recipes/${id}/bake`, {
-      method: "POST",
+ const handleBake = () => {
+  const abortController = new AbortController();
+
+  fetch(`${API_BASE}/recipes/${id}/bake`, {
+    method: "POST",
+    signal: abortController.signal,
+  })
+    .then((res) => {
+      if (!res.ok) return res.json().then((data) => Promise.reject(data));
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) return res.json().then((data) => Promise.reject(data));
-        return res.json();
-      })
-      .then((data) => {
-        toast.success(data.message || "Baking complete!");
-        navigate("/baked_goods");
-      })
-      .catch((error) => {
-        if (error?.missing) {
-          toast.error("Not enough ingredients to bake!");
-          console.error("Missing:", error.missing);
-        } else {
-          toast.error("Failed to bake");
-        }
-      });
-  };
+    .then((data) => {
+      toast.success(data.message || "Baking complete!");
+      navigate("/baked_goods");
+    })
+    .catch((error) => {
+      if (error.name === "AbortError") return;
+      if (error?.missing) {
+        toast.error("Not enough ingredients to bake!");
+        console.error("Missing:", error.missing);
+      } else {
+        toast.error("Failed to bake");
+      }
+    });
+
+  return () => abortController.abort();
+};
 
   // Remove ingredient from recipe
   const handleRemove = (ingredientId) => {
-    fetch(
-      `${API_BASE}/recipes/${id}/ingredients/${ingredientId}`,
-      { method: "DELETE" }
-    )
-      .then(() => {
-        setIngredients((prev) =>
-          prev.filter((i) => i.ingredient_id !== ingredientId)
-        );
-      })
-      .catch(console.error);
-  };
+  const abortController = new AbortController();
+
+  fetch(`${API_BASE}/recipes/${id}/ingredients/${ingredientId}`, {
+    method: "DELETE",
+    signal: abortController.signal,
+  })
+    .then(() => {
+      setIngredients((prev) =>
+        prev.filter((i) => i.ingredient_id !== ingredientId)
+      );
+    })
+    .catch((err) => {
+      if (err.name !== "AbortError") {
+        console.error(err);
+        toast.error("Failed to remove ingredient.");
+      }
+    });
+
+  return () => abortController.abort();
+};
 
   //Disable button if we can't bake
   const canBake = ingredients.every(
@@ -100,19 +120,27 @@ export default function RecipeView() {
 
   // DELETE /recipes/:id
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this recipe?")) return;
-    try {
-      const res = await fetch(
-        `${API_BASE}/recipes/${id}`,
-        { method: "DELETE" }
-      );
-      if (!res.ok) throw new Error("Delete failed");
-      toast("Recipe deleted", { icon: "🗑️" });
-      navigate("/recipes");
-    } catch {
+  if (!window.confirm("Are you sure you want to delete this recipe?")) return;
+
+  const abortController = new AbortController();
+
+  try {
+    const res = await fetch(`${API_BASE}/recipes/${id}`, {
+      method: "DELETE",
+      signal: abortController.signal,
+    });
+    if (!res.ok) throw new Error("Delete failed");
+    toast("Recipe deleted", { icon: "🗑️" });
+    navigate("/recipes");
+  } catch (err) {
+    if (err.name !== "AbortError") {
+      console.error(err);
       toast.error("Failed to delete recipe");
     }
-  };
+  }
+
+  return () => abortController.abort();
+};
 
   return (
     <div className="container py-4">
