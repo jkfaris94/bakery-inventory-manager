@@ -30,7 +30,7 @@ export default function RecipeCreate() {
     toast.error(err.error || "Failed to create recipe");
   }
 
-  return () => abortController.abort(); // Optional cleanup
+  return () => abortController.abort(); 
 };
 
   return (

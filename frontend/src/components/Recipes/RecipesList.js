@@ -27,19 +27,29 @@ export default function RecipesList() {
 
   // DELETE /recipes/:id
   const handleDelete = (id) => {
-    const ok = window.confirm("Are you sure you want to delete this recipe?");
-    if (!ok) return;
-    fetch(`${API_BASE}/recipes/${id}`, {
-      method: "DELETE",
+  const ok = window.confirm("Are you sure you want to delete this recipe?");
+  if (!ok) return;
+
+  const abortController = new AbortController();
+
+  fetch(`${API_BASE}/recipes/${id}`, {
+    method: "DELETE",
+    signal: abortController.signal,
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Delete failed");
+      setRecipes((prev) => prev.filter((r) => r.id !== id));
+      toast("Recipe deleted", { icon: "🗑️" });
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Delete failed");
-        // remove from state
-        setRecipes((prev) => prev.filter((r) => r.id !== id));
-        toast("Recipe deleted", { icon: "🗑️" });
-      })
-      .catch(() => toast.error("Failed to delete recipe"));
-  };
+    .catch((err) => {
+      if (err.name !== "AbortError") {
+        console.error(err);
+        toast.error("Failed to delete recipe");
+      }
+    });
+
+  return () => abortController.abort(); 
+};
 
   return (
     <div className="container py-4">
