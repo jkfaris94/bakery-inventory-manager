@@ -72,10 +72,9 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
 };
 
   return (
-    <div className="row justify-content-center mb-4">
-      <div className="col-md-6 col-lg-4">
-        <form onSubmit={handleSubmit} className="row g-3">
-          <h5 className="mb-3 text-center">Add Ingredient to Recipe</h5>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="row g-3">
+        <h5 className="mb-3 text-center">Add Ingredient to Recipe</h5>
 
           <div className="col-12">
             <label htmlFor="ingredientSelect" className="form-label">
@@ -116,8 +115,7 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
               Add
             </button>
           </div>
-        </form>
-      </div>
+      </form>
     </div>
   );
 }

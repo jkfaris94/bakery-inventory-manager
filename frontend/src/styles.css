@@ -671,12 +671,32 @@ footer.site-footer small {
 }
 
 /* ================= Forms ================= */
-form:not(.row) {
-  background-color: var(--bg-card);
+/* Form Container - consistent styling for all forms */
+.form-container {
+  background-color: var(--bg-secondary);
   padding: var(--spacing-xl);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* When form-container is inside a card, adjust styling */
+.card .form-container {
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  max-width: 100%;
+}
+
+form:not(.row) {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 form.row {

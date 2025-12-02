@@ -22,10 +22,11 @@ export default function RecipeForm({
 
   return (
     <div className="d-flex justify-content-center">
-      <form onSubmit={handleSubmit} className="row g-3 col-12 col-sm-10 col-md-6 col-lg-4">
-        <h2 className="col-12 text-center mb-3">
-          {initialData.id ? "Edit Recipe" : "Create New Recipe"}
-        </h2>
+      <div className="form-container">
+        <form onSubmit={handleSubmit} className="row g-3">
+          <h2 className="col-12 text-center mb-3">
+            {initialData.id ? "Edit Recipe" : "Create New Recipe"}
+          </h2>
 
         <div className="col-12">
           <label htmlFor="title" className="form-label small">
@@ -84,6 +85,7 @@ export default function RecipeForm({
           </button>
         </div>
       </form>
+      </div>
     </div>
   );
 }
