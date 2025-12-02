@@ -52,13 +52,13 @@ export default function IngredientsList() {
         </button>
       </div>
 
-      {ingredients.length === 0 ? (
-        <div className="text-center py-5">
-          <p className="text-muted">No ingredients found.</p>
-        </div>
-      ) : (
-        <div className="row justify-content-center">
-          <div className="col-md-8 col-lg-6">
+      <div className="d-flex justify-content-center">
+        <div className="form-container">
+          {ingredients.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-muted">No ingredients found.</p>
+            </div>
+          ) : (
             <ul className="list-group">
               {ingredients.map((ing) => (
                 <li
@@ -89,9 +89,9 @@ export default function IngredientsList() {
                 </li>
               ))}
             </ul>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

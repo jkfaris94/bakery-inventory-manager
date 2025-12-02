@@ -162,8 +162,8 @@ export default function BakedGoodsList() {
       <h2 className="text-center mb-4">Baked Goods</h2>
 
       {/* Bake a Recipe */}
-      <div className="row justify-content-center mb-4">
-        <div className="col-md-8 col-lg-6">
+      <div className="d-flex justify-content-center mb-4">
+        <div className="form-container">
           <div className="input-group">
             <select
               className="form-select"
@@ -188,8 +188,8 @@ export default function BakedGoodsList() {
       </div>
 
       {/* Baked Goods List */}
-      <div className="row justify-content-center">
-        <div className="col-md-8 col-lg-6">
+      <div className="d-flex justify-content-center">
+        <div className="form-container">
           {goods.length === 0 ? (
             <div className="text-center py-5">
               <p className="text-muted">No baked goods found.</p>

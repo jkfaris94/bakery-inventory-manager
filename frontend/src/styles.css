@@ -680,6 +680,7 @@ footer.site-footer small {
   border: 1px solid var(--border-color);
   max-width: 600px;
   margin: 0 auto;
+  width: 100%;
 }
 
 /* When form-container is inside a card, adjust styling */
@@ -689,6 +690,27 @@ footer.site-footer small {
   border: none;
   padding: 0;
   max-width: 100%;
+}
+
+/* List groups inside form-container */
+.form-container .list-group {
+  margin: 0;
+  box-shadow: none;
+}
+
+.form-container .list-group-item {
+  background-color: var(--bg-card);
+  border-color: var(--border-light);
+}
+
+.form-container .list-group-item:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+/* Input group inside form-container */
+.form-container .input-group {
+  box-shadow: none;
 }
 
 form:not(.row) {
