@@ -212,7 +212,7 @@ header.site-header h1 {
   font-size: var(--fs-h2);
   font-weight: var(--fw-bold);
   color: white;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   text-align: center;
 }
 
@@ -899,7 +899,11 @@ textarea.form-control {
 
   header.site-header h1 {
     font-size: var(--fs-h3);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  header.site-header .navbar {
+    margin-top: var(--spacing-xs);
   }
 
   header.site-header .nav-link {
@@ -935,6 +939,11 @@ textarea.form-control {
 
   header.site-header h1 {
     font-size: var(--fs-h4);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  header.site-header .navbar {
+    margin-top: var(--spacing-xs);
   }
 
   .btn {
