@@ -146,18 +146,20 @@ export default function RecipeView() {
     <div className="container py-4">
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <div className="form-container mb-4">
-            <h2 className="text-center mb-3">{recipeTitle}</h2>
+          {/* Header Section */}
+          <div className="view-header">
+            <h2>{recipeTitle}</h2>
             {recipe.description && (
-              <p className="text-center mb-0 text-muted">{recipe.description}</p>
+              <p className="text-muted">{recipe.description}</p>
             )}
           </div>
-          
-          <div className="card mb-4">
+
+          {/* Image Card */}
+          <div className="image-card mb-4">
             {recipe.image_url ? (
               <img
                 src={recipe.image_url}
-                alt={recipe.name}
+                alt={recipeTitle}
                 className="card-img-top card-img-recipe"
               />
             ) : (
@@ -165,30 +167,9 @@ export default function RecipeView() {
                 <span className="text-muted">No image available</span>
               </div>
             )}
-            <div className="card-body">
-              <div className="d-flex flex-wrap justify-content-center gap-2 mb-3">
-                <button 
-                  className="btn btn-success" 
-                  disabled={!canBake}
-                  onClick={handleBake}
-                >
-                  Bake "{recipeTitle}"
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => navigate(-1)}
-                >
-                  Back
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={handleDelete}
-                >
-                  Delete Recipe
-                </button>
-              </div>
-              {!canBake && missing.length > 0 && (
-                <div className="alert alert-warning mt-3">
+            {!canBake && missing.length > 0 && (
+              <div className="card-body">
+                <div className="alert alert-warning mb-0">
                   <strong>Missing ingredients:</strong>
                   <ul className="mb-0 mt-2">
                     {missing.map((m) => (
@@ -198,29 +179,53 @@ export default function RecipeView() {
                     ))}
                   </ul>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
-          <div className="card mb-4">
+          {/* Action Buttons */}
+          <div className="view-actions">
+            <button 
+              className="btn btn-success" 
+              disabled={!canBake}
+              onClick={handleBake}
+            >
+              Bake "{recipeTitle}"
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={handleDelete}
+            >
+              Delete Recipe
+            </button>
+          </div>
+
+          {/* Ingredients Section */}
+          <div className="related-section mb-4">
             <div className="card-body">
-              <h4 className="mb-4 text-center">Ingredients</h4>
+              <h4>Ingredients</h4>
               {ingredients.length === 0 ? (
-                <p className="text-center text-muted">No ingredients yet.</p>
+                <p className="related-empty">No ingredients yet.</p>
               ) : (
                 <ul className="list-group mb-0">
                   {ingredients.map((ing) => (
                     <li
                       key={ing.ingredient_id}
-                      className="list-group-item d-flex justify-content-between align-items-center"
+                      className="list-group-item related-item"
                     >
                       <div className="flex-grow-1">
-                        <span className="fw-bold">{ing.name}</span>
+                        <span className="related-item-name fw-bold">{ing.name}</span>
                         <small className="text-muted ms-2">
                           {ing.quantity_needed} {ing.unit}
                           {ing.quantity_available !== undefined && (
-                            <span className={ing.quantity_available >= ing.quantity_needed ? 'text-success' : 'text-danger'}>
-                              {' '}(Available: {ing.quantity_available})
+                            <span className={`ingredient-availability ${ing.quantity_available >= ing.quantity_needed ? 'ingredient-available' : 'ingredient-unavailable'}`}>
+                              (Available: {ing.quantity_available})
                             </span>
                           )}
                         </small>
@@ -238,14 +243,13 @@ export default function RecipeView() {
             </div>
           </div>
 
-          <div className="card">
+          {/* Add Ingredient Form */}
+          <div className="related-section">
             <div className="card-body">
               <AddRecipeIngredientForm
                 recipeId={id}
                 onAdd={() => {
-                  fetch(
-                    `${API_BASE}/recipes/${id}/ingredients`
-                  )
+                  fetch(`${API_BASE}/recipes/${id}/ingredients`)
                     .then((res) => res.json())
                     .then(setIngredients);
                 }}

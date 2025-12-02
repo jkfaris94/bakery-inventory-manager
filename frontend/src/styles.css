@@ -1107,3 +1107,154 @@ textarea.form-control {
   color: var(--text-muted);
   font-size: var(--fs-body);
 }
+
+/* ================= View Page Styles ================= */
+/* Header section for detail pages */
+.view-header {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.view-header h2 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.view-header p {
+  margin-bottom: 0;
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+}
+
+/* Detail card for main information */
+.detail-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+  overflow: hidden;
+}
+
+.detail-card .card-body {
+  padding: var(--spacing-xl);
+}
+
+/* Detail field styling */
+.detail-field {
+  margin-bottom: var(--spacing-lg);
+}
+
+.detail-field:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+.detail-value {
+  font-size: var(--fs-h5);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+/* Action button group */
+.view-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Related items section */
+.related-section {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+  overflow: hidden;
+}
+
+.related-section .card-body {
+  padding: var(--spacing-xl);
+}
+
+.related-section h4 {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* Empty state for related items */
+.related-empty {
+  text-align: center;
+  padding: var(--spacing-lg);
+  color: var(--text-muted);
+}
+
+/* List item styling for related items */
+.related-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color var(--transition-fast);
+}
+
+.related-item:last-child {
+  border-bottom: none;
+}
+
+.related-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.related-item-name {
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+  font-size: var(--fs-body);
+}
+
+/* Image card styling */
+.image-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-xl);
+  overflow: hidden;
+}
+
+.image-card .card-body {
+  padding: var(--spacing-lg);
+}
+
+/* Ingredient availability styling */
+.ingredient-availability {
+  font-size: var(--fs-small);
+  margin-left: var(--spacing-sm);
+}
+
+.ingredient-available {
+  color: var(--success-color);
+}
+
+.ingredient-unavailable {
+  color: var(--danger-color);
+}

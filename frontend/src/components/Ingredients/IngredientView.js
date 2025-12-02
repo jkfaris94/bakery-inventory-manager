@@ -82,46 +82,66 @@ const handleDelete = async () => {
     <div className="container py-4">
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <h2 className="mb-4 text-center">Ingredient Details</h2>
+          {/* Header Section */}
+          <div className="view-header">
+            <h2>Ingredient Details</h2>
+          </div>
 
-          <div className="card mb-4">
+          {/* Main Details Card */}
+          <div className="detail-card">
             <div className="card-body">
-              <dl className="row mb-0">
-                <div className="col-sm-6 mb-3 mb-sm-0">
-                  <dt className="fw-bold text-muted small mb-1">Name</dt>
-                  <dd className="mb-0 fs-5">{ingredient.name}</dd>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="detail-field">
+                    <span className="detail-label">Name</span>
+                    <div className="detail-value">{ingredient.name}</div>
+                  </div>
                 </div>
                 <div className="col-sm-6">
-                  <dt className="fw-bold text-muted small mb-1">Quantity</dt>
-                  <dd className="mb-0 fs-5">{ingredient.quantity} {ingredient.unit}</dd>
+                  <div className="detail-field">
+                    <span className="detail-label">Quantity</span>
+                    <div className="detail-value">{ingredient.quantity} {ingredient.unit}</div>
+                  </div>
                 </div>
-              </dl>
+              </div>
             </div>
           </div>
 
-          <div className="text-center mb-4">
-            <div className="d-flex flex-wrap justify-content-center gap-2">
-              <button onClick={() => navigate(`/ingredients/${id}/edit`)} className="btn btn-primary">
-                Edit
-              </button>
-              <button onClick={handleDelete} className="btn btn-danger">
-                Delete
-              </button>
-              <button onClick={() => navigate("/ingredients")} className="btn btn-secondary">
-                Back to Ingredients
-              </button>
-            </div>
+          {/* Action Buttons */}
+          <div className="view-actions">
+            <button 
+              onClick={() => navigate(`/ingredients/${id}/edit`)} 
+              className="btn btn-primary"
+            >
+              Edit
+            </button>
+            <button 
+              onClick={handleDelete} 
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+            <button 
+              onClick={() => navigate("/ingredients")} 
+              className="btn btn-secondary"
+            >
+              Back to Ingredients
+            </button>
           </div>
 
+          {/* Related Recipes Section */}
           {recipes.length > 0 && (
-            <div className="card">
+            <div className="related-section">
               <div className="card-body">
-                <h4 className="mb-4 text-center">Used In Recipes</h4>
-                <ul className="list-group">
+                <h4>Used In Recipes</h4>
+                <ul className="list-group mb-0">
                   {recipes.map((r) => (
-                    <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
-                      <span className="fw-medium">{r.title || `Recipe ${r.id}`}</span>
-                      <button onClick={() => navigate(`/recipes/${r.id}`)} className="btn btn-outline-primary btn-sm">
+                    <li key={r.id} className="list-group-item related-item">
+                      <span className="related-item-name">{r.title || `Recipe ${r.id}`}</span>
+                      <button 
+                        onClick={() => navigate(`/recipes/${r.id}`)} 
+                        className="btn btn-outline-primary btn-sm"
+                      >
                         View
                       </button>
                     </li>
