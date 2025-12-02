@@ -48,9 +48,9 @@ A full‑stack bakery inventory management application built with React, React R
 ## 🧰 Tech Stack
 
 * **Frontend:** React, React Router v6, Bootstrap 5, react‑hot‑toast
-* **Backend:** Node.js, Express, Knex.js, PostgreSQL (dev), SQLite (test)
+* **Backend:** Node.js, Express, Knex.js, PostgreSQL (dev/production via Neon), SQLite (test)
 * **Testing:** Jest, Supertest (backend), in‑memory SQLite for tests
-* **Deployment:** Vercel / Netlify (frontend), Heroku / Render (backend)
+* **Deployment:** Render (frontend & backend), Neon (PostgreSQL database)
 
 ## 🚀 Getting Started
 
@@ -62,18 +62,28 @@ A full‑stack bakery inventory management application built with React, React R
 
 ### Environment Variables
 
-Create a `.env` in the **backend** folder from the sample:
+Create a `.env` in the **backend** folder:
 
 ```bash
-dir backend\cp .env.sample .env
+# On Windows
+copy .env.sample .env
+
+# On Mac/Linux
+cp .env.sample .env
 ```
 
 Then edit `backend/.env`:
 
 ```
-DATABASE_URL=postgresql://bakery_inventory_manager_user:ZN4Vh8KBk1bvpMnZC12nFoTlop8jNcXe@dpg-d1cthv95pdvs73c5f7ag-a.oregon-postgres.render.com/bakery_inventory_manager?ssl=true
+DATABASE_URL=postgresql://user:password@host:port/database?sslmode=require&channel_binding=require
 LOG_LEVEL=info
 ```
+
+**For Production (Neon):**
+- Get your connection string from [Neon Console](https://console.neon.tech)
+- The connection string should include `sslmode=require` for secure SSL connections
+- Set this as the `DATABASE_URL` environment variable in your deployment platform (e.g., Render)
+- Example format: `postgresql://user:password@ep-xxx-pooler.region.aws.neon.tech/dbname?sslmode=require&channel_binding=require`
 
 ### Installation
 
@@ -90,12 +100,22 @@ cd ../frontend && npm install
 
 ### Database Setup
 
+**For Local Development:**
 1. Create your development database in PostgreSQL:
 
    ```sql
    CREATE DATABASE bakery_inventory;
    ```
-2. In `backend/knexfile.js`, ensure `DATABASE_URL` matches your `.env`.
+2. Update `backend/.env` with your local PostgreSQL connection string.
+
+**For Production (Neon):**
+1. Create a free account at [Neon](https://neon.tech)
+2. Create a new project and database
+3. Copy the connection string from the Neon dashboard
+4. Set `DATABASE_URL` in your deployment platform's environment variables (e.g., Render)
+5. Migrations and seeds will run automatically on server startup
+
+**Note:** Neon's free tier provides 0.5GB storage with no auto-deletion, making it ideal for portfolio projects.
 
 ### Migrations & Seeding
 
