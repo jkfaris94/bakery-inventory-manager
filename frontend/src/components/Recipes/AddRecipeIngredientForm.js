@@ -77,7 +77,7 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
         <h5 className="mb-3 text-center">Add Ingredient to Recipe</h5>
 
           <div className="col-12">
-            <label htmlFor="ingredientSelect" className="form-label">
+            <label htmlFor="ingredientSelect" className="form-label small">
               Ingredient
             </label>
             <select
@@ -97,7 +97,7 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
           </div>
 
           <div className="col-12">
-            <label htmlFor="quantityInput" className="form-label">
+            <label htmlFor="quantityInput" className="form-label small">
               Quantity Needed
             </label>
             <input

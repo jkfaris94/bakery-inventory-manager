@@ -76,7 +76,7 @@ const handleDelete = async () => {
   return () => abortController.abort(); 
 };
 
-  if (!ingredient) return <p>Loading ingredient...</p>;
+  if (!ingredient) return <p className="loading-text">Loading ingredient...</p>;
 
   return (
     <div className="container py-4">

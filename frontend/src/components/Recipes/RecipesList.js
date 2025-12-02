@@ -86,8 +86,7 @@ export default function RecipesList() {
                 />
               ) : (
                 <div
-                  className="d-flex align-items-center justify-content-center bg-light"
-                  style={{ height: "180px" }}
+                  className="card-img-placeholder"
                 >
                   <span className="text-muted">No image available</span>
                 </div>

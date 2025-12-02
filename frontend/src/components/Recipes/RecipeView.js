@@ -116,7 +116,7 @@ export default function RecipeView() {
       unit,
     }));
 
-  if (!recipe) return <p>Loading…</p>;
+  if (!recipe) return <p className="loading-text">Loading…</p>;
 
   // DELETE /recipes/:id
   const handleDelete = async () => {
@@ -158,14 +158,10 @@ export default function RecipeView() {
               <img
                 src={recipe.image_url}
                 alt={recipe.name}
-                className="card-img-top"
-                style={{ maxHeight: "300px", objectFit: "cover" }}
+                className="card-img-top card-img-recipe"
               />
             ) : (
-              <div
-                className="bg-light d-flex align-items-center justify-content-center"
-                style={{ height: "300px" }}
-              >
+              <div className="card-img-placeholder-large">
                 <span className="text-muted">No image available</span>
               </div>
             )}

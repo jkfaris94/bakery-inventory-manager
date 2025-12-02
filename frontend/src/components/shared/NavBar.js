@@ -156,16 +156,15 @@ export default function NavBar() {
       <nav ref={navRef} className="navbar navbar-expand-lg navbar-light">
         <div className="container-fluid px-0">
           <button
-            className="navbar-toggler"
+            className="navbar-toggler navbar-toggler-white"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#mainNav"
             aria-controls="mainNav"
             aria-expanded="false"
             aria-label="Toggle navigation"
-            style={{ borderColor: 'rgba(255, 255, 255, 0.3)' }}
           >
-            <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }} />
+            <span className="navbar-toggler-icon navbar-toggler-icon-white" />
           </button>
           <div ref={collapseRef} className="collapse navbar-collapse" id="mainNav">
             <ul className="navbar-nav ms-auto">
@@ -185,9 +184,8 @@ export default function NavBar() {
                       to={link.to}
                       end={link.end}
                       className={({ isActive: navIsActive }) =>
-                        `nav-link ${navIsActive || isActive ? ' active' : ''} ${hasSubmenu ? 'has-submenu' : ''}`
+                        `nav-link nav-link-white ${navIsActive || isActive ? ' active' : ''} ${hasSubmenu ? 'has-submenu' : ''}`
                       }
-                      style={{ color: 'white' }}
                       onClick={(e) => handleParentLinkClick(e, link)}
                       onKeyDown={(e) => handleParentKeyDown(e, link)}
                       aria-expanded={hasSubmenu ? isExpanded : undefined}
@@ -227,9 +225,8 @@ export default function NavBar() {
                             <NavLink
                               to={subLink.to}
                               className={({ isActive }) =>
-                                `nav-link submenu-link ${isActive ? ' active' : ''}`
+                                `nav-link submenu-link nav-link-white ${isActive ? ' active' : ''}`
                               }
-                              style={{ color: 'white' }}
                               onClick={handleSubmenuLinkClick}
                               role="menuitem"
                             >

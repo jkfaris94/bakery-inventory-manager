@@ -70,7 +70,7 @@ export default function IngredientEdit() {
   const handleCancel = () => navigate(-1);
 
   // Show loading if formData missing id
-  if (!formData.id) return <p>Loading...</p>;
+  if (!formData.id) return <p className="loading-text">Loading...</p>;
 
   return (
     <div className="container py-4">
