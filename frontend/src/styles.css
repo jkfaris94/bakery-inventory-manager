@@ -603,6 +603,13 @@ footer.site-footer small {
   border-color: var(--border-color);
 }
 
+/* Recipe card with background container */
+.recipe-card-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
 .card-img-top {
   width: 100%;
   height: 180px;
@@ -845,6 +852,10 @@ textarea.form-control {
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.home-hero .form-container {
+  max-width: 100%;
 }
 
 .home-hero h1 {

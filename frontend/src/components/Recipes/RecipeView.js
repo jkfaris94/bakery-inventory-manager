@@ -146,10 +146,12 @@ export default function RecipeView() {
     <div className="container py-4">
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <h2 className="text-center mb-3">{recipeTitle}</h2>
-          {recipe.description && (
-            <p className="text-center mb-4 text-muted">{recipe.description}</p>
-          )}
+          <div className="form-container mb-4">
+            <h2 className="text-center mb-3">{recipeTitle}</h2>
+            {recipe.description && (
+              <p className="text-center mb-0 text-muted">{recipe.description}</p>
+            )}
+          </div>
           
           <div className="card mb-4">
             {recipe.image_url ? (

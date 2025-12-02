@@ -77,7 +77,7 @@ export default function RecipesList() {
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {recipes.map((r) => (
           <div className="col" key={r.id}>
-            <div className="card h-100">
+            <div className="card h-100 recipe-card-container">
               {r.image_url ? (
                 <img
                   src={r.image_url}
