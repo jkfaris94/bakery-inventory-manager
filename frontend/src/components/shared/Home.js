@@ -11,11 +11,11 @@ export default function Home() {
           <Link to="/ingredients" className="btn btn-primary btn-lg">
             Ingredients
           </Link>
-          <Link to="/baked_goods" className="btn btn-primary btn-lg">
-            Baked Goods
-          </Link>
           <Link to="/recipes" className="btn btn-primary btn-lg">
             Recipes
+          </Link>
+          <Link to="/baked_goods" className="btn btn-primary btn-lg">
+            Baked Goods
           </Link>
         </div>
       </div>

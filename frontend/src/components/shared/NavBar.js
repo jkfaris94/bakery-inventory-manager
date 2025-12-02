@@ -21,17 +21,17 @@ export default function NavBar() {
   const links = [
     { to: '/', label: 'Home', end: true },
     { 
-      to: '/recipes', 
-      label: 'Recipes',
-      submenu: [
-        { to: '/recipes/new', label: 'New Recipe' }
-      ]
-    },
-    { 
       to: '/ingredients', 
       label: 'Ingredients',
       submenu: [
         { to: '/ingredients/new', label: 'New Ingredient' }
+      ]
+    },
+    { 
+      to: '/recipes', 
+      label: 'Recipes',
+      submenu: [
+        { to: '/recipes/new', label: 'New Recipe' }
       ]
     },
     { to: '/baked_goods', label: 'Baked Goods' },
