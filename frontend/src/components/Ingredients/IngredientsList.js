@@ -10,8 +10,17 @@ export default function IngredientsList() {
 
   useEffect(() => {
     const controller = new AbortController();
+    const startTime = Date.now();
+    
     fetch(`${API_BASE}/ingredients`, { signal: controller.signal })
       .then((res) => {
+        const responseTime = Date.now() - startTime;
+        
+        // If response took more than 3 seconds, show success message that backend is ready
+        if (responseTime > 3000) {
+          toast.success("Backend is now ready!", { duration: 3000 });
+        }
+        
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
         }
@@ -21,7 +30,9 @@ export default function IngredientsList() {
     .catch((err) => {
       if (err.name === "AbortError") return;
       console.error("Ingredients fetch failed:", err);
-      toast.error("Failed to load ingredients");
+      toast.error("Failed to load ingredients. Backend may still be starting up...", {
+        duration: 5000,
+      });
     });
 
   // cleanup: cancel fetch if the component unmounts

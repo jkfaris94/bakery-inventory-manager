@@ -11,15 +11,26 @@ export default function RecipesList() {
   // GET /recipes
   useEffect(() => {
     const abortController = new AbortController();
+    const startTime = Date.now();
+    
     fetch(`${API_BASE}/recipes`, { signal: abortController.signal })
       .then((res) => {
+        const responseTime = Date.now() - startTime;
+        
+        // If response took more than 3 seconds, show success message that backend is ready
+        if (responseTime > 3000) {
+          toast.success("Backend is now ready!", { duration: 3000 });
+        }
+        
         if (!res.ok) throw new Error("Failed to load");
         return res.json();
       })
       .then(({ data }) => setRecipes(data))
       .catch((err) => {
         if (err.name !== "AbortError") {
-          toast.error("Failed to load recipes");
+          toast.error("Failed to load recipes. Backend may still be starting up...", {
+            duration: 5000,
+          });
         }
       });
     return () => abortController.abort();

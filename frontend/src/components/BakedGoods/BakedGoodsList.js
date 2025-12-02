@@ -25,9 +25,17 @@ export default function BakedGoodsList() {
   // Fetch baked goods 
   useEffect(() => {
     const abortController = new AbortController();
+    const startTime = Date.now();
 
     fetch(`${API_BASE}/baked_goods`, { signal: abortController.signal })
       .then((res) => {
+        const responseTime = Date.now() - startTime;
+        
+        // If response took more than 3 seconds, show success message that backend is ready
+        if (responseTime > 3000) {
+          toast.success("Backend is now ready!", { duration: 3000 });
+        }
+        
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
@@ -38,7 +46,9 @@ export default function BakedGoodsList() {
         if (err.name !== "AbortError") {
           console.error(err);
           setGoods([]);
-          toast.error("Failed to load baked goods");
+          toast.error("Failed to load baked goods. Backend may still be starting up...", {
+            duration: 5000,
+          });
         } 
       });
 
@@ -61,7 +71,9 @@ export default function BakedGoodsList() {
         if (err.name !== "AbortError") {
           console.error(err);
           setRecipes([]);
-          toast.error("Failed to load recipes");
+          toast.error("Failed to load recipes. Backend may still be starting up...", {
+            duration: 5000,
+          });
         }
       });
     return () => abortController.abort();
