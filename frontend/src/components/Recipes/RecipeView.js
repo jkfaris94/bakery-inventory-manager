@@ -216,7 +216,7 @@ export default function RecipeView() {
                       key={ing.ingredient_id}
                       className="list-group-item d-flex justify-content-between align-items-center"
                     >
-                      <div>
+                      <div className="flex-grow-1">
                         <span className="fw-bold">{ing.name}</span>
                         <small className="text-muted ms-2">
                           {ing.quantity_needed} {ing.unit}
@@ -228,7 +228,7 @@ export default function RecipeView() {
                         </small>
                       </div>
                       <button
-                        className="btn btn-outline-danger btn-sm"
+                        className="btn btn-outline-danger btn-sm ms-3"
                         onClick={() => handleRemove(ing.ingredient_id)}
                       >
                         Remove
