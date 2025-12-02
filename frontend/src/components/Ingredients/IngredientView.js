@@ -80,48 +80,57 @@ const handleDelete = async () => {
 
   return (
     <div className="container py-4">
-      <h2 className="mb-4 text-center">Ingredient Details</h2>
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <h2 className="mb-4 text-center">Ingredient Details</h2>
 
-      <dl className="d-flex flex-column align-items-center mb-4">
-        <div className="d-flex align-items-center mb-2">
-          <dt className="me-2 fw-bold">Name:</dt>
-          <dd className="mb-0">{ingredient.name}</dd>
+          <div className="card mb-4">
+            <div className="card-body">
+              <dl className="row mb-0">
+                <div className="col-sm-6 mb-3 mb-sm-0">
+                  <dt className="fw-bold text-muted small mb-1">Name</dt>
+                  <dd className="mb-0 fs-5">{ingredient.name}</dd>
+                </div>
+                <div className="col-sm-6">
+                  <dt className="fw-bold text-muted small mb-1">Quantity</dt>
+                  <dd className="mb-0 fs-5">{ingredient.quantity} {ingredient.unit}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <div className="text-center mb-4">
+            <div className="d-flex flex-wrap justify-content-center gap-2">
+              <button onClick={() => navigate(`/ingredients/${id}/edit`)} className="btn btn-primary">
+                Edit
+              </button>
+              <button onClick={handleDelete} className="btn btn-danger">
+                Delete
+              </button>
+              <button onClick={() => navigate("/ingredients")} className="btn btn-secondary">
+                Back to Ingredients
+              </button>
+            </div>
+          </div>
+
+          {recipes.length > 0 && (
+            <div className="card">
+              <div className="card-body">
+                <h4 className="mb-4 text-center">Used In Recipes</h4>
+                <ul className="list-group">
+                  {recipes.map((r) => (
+                    <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
+                      <span className="fw-medium">{r.title || `Recipe ${r.id}`}</span>
+                      <button onClick={() => navigate(`/recipes/${r.id}`)} className="btn btn-outline-primary btn-sm">
+                        View
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="d-flex align-items-center">
-          <dt className="me-2 fw-bold">Quantity:</dt>
-          <dd className="mb-0">{ingredient.quantity} {ingredient.unit}</dd>
-        </div>
-      </dl>
-
-      <div className="text-center mb-4">
-        <button onClick={() => navigate(`/ingredients/${id}/edit`)} className="btn btn-primary me-2">
-          Edit
-        </button>
-        <button onClick={handleDelete} className="btn btn-danger">
-          Delete
-        </button>
-      </div>
-
-      {recipes.length > 0 && (
-        <div className="mt-4">
-          <h4 className="text-center">Used In Recipes</h4>
-          <ul className="list-group">
-            {recipes.map((r) => (
-              <li key={r.id} className="list-group-item d-flex justify-content-between align-items-center">
-                {r.title || `Recipe ${r.id}`}
-                <button onClick={() => navigate(`/recipes/${r.id}`)} className="btn btn-outline-primary btn-sm">
-                  View
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="text-center mt-4">
-        <button onClick={() => navigate("/ingredients")} className="btn btn-secondary">
-          Back to Ingredients
-        </button>
       </div>
     </div>
   );

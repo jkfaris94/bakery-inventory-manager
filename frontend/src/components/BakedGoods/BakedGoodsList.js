@@ -163,8 +163,8 @@ export default function BakedGoodsList() {
 
       {/* Bake a Recipe */}
       <div className="row justify-content-center mb-4">
-        <div className="col-md-6 col-lg-4">
-          <div className="input-group input-group-sm">
+        <div className="col-md-8 col-lg-6">
+          <div className="input-group">
             <select
               className="form-select"
               value={selectedRecipeId}
@@ -189,15 +189,17 @@ export default function BakedGoodsList() {
 
       {/* Baked Goods List */}
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
+        <div className="col-md-8 col-lg-6">
           {goods.length === 0 ? (
-            <p className="text-center">No baked goods found.</p>
+            <div className="text-center py-5">
+              <p className="text-muted">No baked goods found.</p>
+            </div>
           ) : (
             <ul className="list-group">
               {goods.map((g) => (
                 <li
                   key={g.id}
-                  className="list-group-item d-flex justify-content-between align-items-center py-2"
+                  className="list-group-item"
                 >
                   {editingId === g.id ? (
                     <div className="w-100">
@@ -209,19 +211,20 @@ export default function BakedGoodsList() {
                       />
                     </div>
                   ) : (
-                    <>
-                      <span>
-                        <strong>{g.name}</strong> — {g.quantity}
-                      </span>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="flex-grow-1">
+                        <span className="fw-bold d-block mb-1">{g.name}</span>
+                        <small className="text-muted">Quantity: {g.quantity}</small>
+                      </div>
                       <div>
                         <button
-                          className="btn btn-outline-primary btn-sm me-2"
+                          className="btn btn-outline-primary btn-sm"
                           onClick={() => handleEditClick(g)}
                         >
                           Edit
                         </button>
                       </div>
-                    </>
+                    </div>
                   )}
                 </li>
               ))}

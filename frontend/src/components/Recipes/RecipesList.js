@@ -65,7 +65,7 @@ export default function RecipesList() {
   return (
     <div className="container py-4">
       <h2 className="text-center mb-4">Recipes</h2>
-      <div className="d-flex justify-content-end mb-3">
+      <div className="d-flex justify-content-end mb-4">
         <button
           onClick={() => navigate("/recipes/new")}
           className="btn btn-primary"
@@ -74,7 +74,7 @@ export default function RecipesList() {
         </button>
       </div>
 
-      <div className="row row-cols-1 row-cols-md-2 g-4">
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {recipes.map((r) => (
           <div className="col" key={r.id}>
             <div className="card h-100">
@@ -83,7 +83,6 @@ export default function RecipesList() {
                   src={r.image_url}
                   className="card-img-top"
                   alt={r.title}
-                  style={{ objectFit: "cover", height: "180px" }}
                 />
               ) : (
                 <div
@@ -95,16 +94,19 @@ export default function RecipesList() {
               )}
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{r.title || `Recipe ${r.id}`}</h5>
-                <div className="mt-auto">
+                {r.description && (
+                  <p className="card-text small text-muted">{r.description.substring(0, 100)}{r.description.length > 100 ? '...' : ''}</p>
+                )}
+                <div className="mt-auto d-flex flex-wrap gap-2">
                   <button
                     onClick={() => navigate(`/recipes/${r.id}`)}
-                    className="btn btn-outline-primary btn-sm me-2"
+                    className="btn btn-outline-primary btn-sm"
                   >
                     View
                   </button>
                   <button
                     onClick={() => navigate(`/recipes/${r.id}`)}
-                    className="btn btn-outline-secondary btn-sm me-2"
+                    className="btn btn-outline-secondary btn-sm"
                   >
                     Edit
                   </button>

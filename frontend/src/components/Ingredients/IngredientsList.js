@@ -43,9 +43,9 @@ export default function IngredientsList() {
     <div className="container py-4">
       <h2 className="text-center mb-4">Ingredients</h2>
 
-      <div className="d-flex justify-content-center mb-3">
+      <div className="d-flex justify-content-center mb-4">
         <button
-          className="btn btn-primary "
+          className="btn btn-primary"
           onClick={() => navigate("/ingredients/new")}
         >
           + Create New Ingredient
@@ -53,26 +53,28 @@ export default function IngredientsList() {
       </div>
 
       {ingredients.length === 0 ? (
-        <p className="text-center">No ingredients found.</p>
+        <div className="text-center py-5">
+          <p className="text-muted">No ingredients found.</p>
+        </div>
       ) : (
         <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-4">
+          <div className="col-md-8 col-lg-6">
             <ul className="list-group">
               {ingredients.map((ing) => (
                 <li
                   key={ing.id}
-                  className="list-group-item d-flex justify-content-between align-items-center py-2"
+                  className="list-group-item d-flex justify-content-between align-items-center"
                 >
-                  <div>
-                    <span className="fw-bold me-2">{ing.name}</span>
+                  <div className="flex-grow-1">
+                    <span className="fw-bold d-block mb-1">{ing.name}</span>
                     <small className="text-muted">
                       {ing.quantity} {ing.unit}
                     </small>
                   </div>
 
-                  <div>
+                  <div className="d-flex gap-2">
                     <button
-                      className="btn btn-outline-primary btn-sm me-2"
+                      className="btn btn-outline-primary btn-sm"
                       onClick={() => navigate(`/ingredients/${ing.id}`)}
                     >
                       View

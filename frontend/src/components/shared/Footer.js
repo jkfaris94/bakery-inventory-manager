@@ -1,12 +1,15 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
-    <footer className="site-footer" style={{ borderTop: "1px solid #ddd" }}>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/ingredients" style={{ margin: "0 1rem" }}>Ingredients</a>
-            <a href="/recipes">Recipes</a>
-        </nav>
-        <small>© 2025 created by jkfaris94.</small>
+    <footer className="site-footer">
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/ingredients">Ingredients</Link>
+        <Link to="/recipes">Recipes</Link>
+        <Link to="/baked_goods">Baked Goods</Link>
+      </nav>
+      <small>© 2025 created by jkfaris94.</small>
     </footer>
   );
 }
