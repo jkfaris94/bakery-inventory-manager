@@ -178,22 +178,8 @@ export default function NavBar() {
 
                 return (
                   <li 
-                    className={`nav-item ${hasSubmenu ? 'nav-item-dropdown' : ''}`} 
+                    className={`nav-item ${hasSubmenu ? 'nav-item-dropdown' : ''} ${isExpanded ? 'submenu-expanded' : ''}`} 
                     key={link.to}
-                    onMouseEnter={(e) => {
-                      if (!isMobile && hasSubmenu) {
-                        setExpandedSubmenus(prev => new Set(prev).add(link.to));
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isMobile && hasSubmenu) {
-                        setExpandedSubmenus(prev => {
-                          const newSet = new Set(prev);
-                          newSet.delete(link.to);
-                          return newSet;
-                        });
-                      }
-                    }}
                   >
                     <NavLink
                       to={link.to}

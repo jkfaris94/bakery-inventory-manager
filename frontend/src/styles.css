@@ -345,15 +345,42 @@ header.site-header .nav-link:focus {
   transform: translateY(-10px);
   transition: all var(--transition-base);
   z-index: 1000;
-  margin-top: var(--spacing-xs);
+  margin-top: 0;
   padding: var(--spacing-xs) 0;
+  padding-top: var(--spacing-sm);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
 }
 
 .submenu.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Desktop hover - use CSS for more reliable hover */
+@media (min-width: 992px) {
+  .nav-item-dropdown:hover .submenu,
+  .nav-item-dropdown.submenu-expanded .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  
+  .nav-item-dropdown:hover .submenu-indicator,
+  .nav-item-dropdown.submenu-expanded .submenu-indicator {
+    transform: rotate(180deg);
+  }
+  
+  /* Ensure submenu stays visible when hovering over it */
+  .nav-item-dropdown .submenu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 }
 
 .submenu-link {
