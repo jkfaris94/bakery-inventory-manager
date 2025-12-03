@@ -84,22 +84,17 @@ const handleDelete = async () => {
         <div className="col-lg-8">
           {/* Header Section */}
           <div className="view-header">
-            <h2>Ingredient Details</h2>
+            <h2>{ingredient.name}</h2>
+            <p className="text-secondary">Ingredient Details</p>
           </div>
 
           {/* Main Details Card */}
           <div className="detail-card">
             <div className="card-body">
-              <div className="row">
+              <div className="row justify-content-center text-center">
                 <div className="col-sm-6">
                   <div className="detail-field">
-                    <span className="detail-label">Name</span>
-                    <div className="detail-value">{ingredient.name}</div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="detail-field">
-                    <span className="detail-label">Quantity</span>
+                    <span className="detail-label">Quantity In Stock</span>
                     <div className="detail-value">{ingredient.quantity} {ingredient.unit}</div>
                   </div>
                 </div>
@@ -113,7 +108,7 @@ const handleDelete = async () => {
               onClick={() => navigate(`/ingredients/${id}/edit`)} 
               className="btn btn-primary"
             >
-              Edit
+              Edit Ingredient
             </button>
             <button 
               onClick={handleDelete} 
@@ -125,7 +120,7 @@ const handleDelete = async () => {
               onClick={() => navigate("/ingredients")} 
               className="btn btn-secondary"
             >
-              Back to Ingredients
+              Back to List
             </button>
           </div>
 

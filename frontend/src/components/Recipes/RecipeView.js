@@ -193,16 +193,16 @@ export default function RecipeView() {
               Bake "{recipeTitle}"
             </button>
             <button
-              className="btn btn-secondary"
-              onClick={() => navigate(-1)}
-            >
-              Back
-            </button>
-            <button
               className="btn btn-danger"
               onClick={handleDelete}
             >
               Delete Recipe
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => navigate(-1)}
+            >
+              Back
             </button>
           </div>
 
