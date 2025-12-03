@@ -152,9 +152,15 @@ export default function NavBar() {
 
   return (
     <div className="container">
-      <h1 className="mb-0">Maeve's Fine Baked Goods</h1>
       <nav ref={navRef} className="navbar navbar-expand-lg navbar-light">
         <div className="container-fluid px-0">
+          <NavLink
+            to="/"
+            className="navbar-brand"
+            onClick={handleNavLinkClick}
+          >
+            MFBG
+          </NavLink>
           <button
             className="navbar-toggler navbar-toggler-white"
             type="button"

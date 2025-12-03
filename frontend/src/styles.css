@@ -198,7 +198,7 @@ a:focus {
 
 /* ================= Header & Navigation ================= */
 header.site-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 30%, var(--accent-color) 60%, var(--primary-light) 100%);
   color: white;
   padding: var(--spacing-lg) var(--spacing-md);
   box-shadow: var(--shadow-md);
@@ -220,6 +220,13 @@ header.site-header .navbar {
   background-color: transparent !important;
   box-shadow: none;
   padding: 0;
+  align-items: center;
+}
+
+header.site-header .navbar .container-fluid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 header.site-header .nav-link {
@@ -245,6 +252,30 @@ header.site-header .nav-link.active {
 header.site-header .nav-link:focus {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
+}
+
+header.site-header .navbar-brand {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-h4);
+  color: white !important;
+  text-decoration: none;
+  padding: var(--spacing-sm) 0;
+  margin-right: var(--spacing-lg);
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+}
+
+header.site-header .navbar-brand:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.05);
+}
+
+header.site-header .navbar-brand:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Standalone navbar (if used elsewhere) */
@@ -949,14 +980,14 @@ textarea.form-control {
   header.site-header {
     padding: var(--spacing-md);
   }
-
-  header.site-header h1 {
-    font-size: var(--fs-h3);
-    margin-bottom: var(--spacing-md);
-  }
   
   header.site-header .navbar {
-    margin-top: var(--spacing-xs);
+    margin-top: 0;
+  }
+
+  header.site-header .navbar-brand {
+    font-size: var(--fs-h5);
+    margin-right: var(--spacing-md);
   }
 
   header.site-header .nav-link {
@@ -990,13 +1021,13 @@ textarea.form-control {
     --container-padding: var(--spacing-sm);
   }
 
-  header.site-header h1 {
-    font-size: var(--fs-h4);
-    margin-bottom: var(--spacing-md);
-  }
-  
   header.site-header .navbar {
-    margin-top: var(--spacing-xs);
+    margin-top: 0;
+  }
+
+  header.site-header .navbar-brand {
+    font-size: var(--fs-h6);
+    margin-right: var(--spacing-sm);
   }
 
   .btn {
