@@ -104,7 +104,7 @@ const handleDelete = async () => {
 
           {/* Related Recipes Section */}
           {recipes.length > 0 && (
-            <div className="related-section form-container">
+            <div className="related-section">
               <div className="card-body">
                 <h4 className="text-center">Used In Recipes</h4>
                 <ul className="list-group mb-0">

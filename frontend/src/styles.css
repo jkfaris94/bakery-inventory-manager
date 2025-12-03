@@ -1213,10 +1213,10 @@ textarea.form-control {
 
 /* Related items section */
 .related-section {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-light);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   margin-bottom: var(--spacing-xl);
   overflow: hidden;
 }
@@ -1246,6 +1246,7 @@ textarea.form-control {
   padding: var(--spacing-md) var(--spacing-lg);
   border-bottom: 1px solid var(--border-light);
   transition: background-color var(--transition-fast);
+  gap: var(--spacing-md);
 }
 
 .related-item:last-child {

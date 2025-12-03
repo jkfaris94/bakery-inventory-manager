@@ -184,7 +184,7 @@ export default function RecipeView() {
           </div>
 
           {/* Ingredients Section */}
-          <div className="related-section mb-4 form-container">
+          <div className="related-section mb-4">
             <div className="card-body">
               <h4 className="text-center">Ingredients</h4>
               {ingredients.length === 0 ? (
