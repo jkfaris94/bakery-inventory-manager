@@ -102,33 +102,11 @@ const handleDelete = async () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="view-actions">
-            <button 
-              onClick={() => navigate(`/ingredients/${id}/edit`)} 
-              className="btn btn-primary"
-            >
-              Edit Ingredient
-            </button>
-            <button 
-              onClick={handleDelete} 
-              className="btn btn-danger"
-            >
-              Delete
-            </button>
-            <button 
-              onClick={() => navigate("/ingredients")} 
-              className="btn btn-secondary"
-            >
-              Back to List
-            </button>
-          </div>
-
           {/* Related Recipes Section */}
           {recipes.length > 0 && (
-            <div className="related-section">
+            <div className="related-section form-container">
               <div className="card-body">
-                <h4>Used In Recipes</h4>
+                <h4 className="text-center">Used In Recipes</h4>
                 <ul className="list-group mb-0">
                   {recipes.map((r) => (
                     <li key={r.id} className="list-group-item related-item">
@@ -145,6 +123,28 @@ const handleDelete = async () => {
               </div>
             </div>
           )}
+
+          {/* Action Buttons */}
+          <div className="view-actions mt-4">
+            <button 
+              onClick={() => navigate(`/ingredients/${id}/edit`)} 
+              className="btn btn-primary"
+            >
+              Edit Ingredient
+            </button>
+            <button 
+              onClick={handleDelete} 
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+            <button 
+              onClick={() => navigate("/ingredients")} 
+              className="btn btn-secondary"
+            >
+              Back to Ingredients
+            </button>
+          </div>
         </div>
       </div>
     </div>

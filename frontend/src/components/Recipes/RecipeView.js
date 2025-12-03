@@ -183,33 +183,10 @@ export default function RecipeView() {
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="view-actions">
-            <button 
-              className="btn btn-success" 
-              disabled={!canBake}
-              onClick={handleBake}
-            >
-              Bake "{recipeTitle}"
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={handleDelete}
-            >
-              Delete Recipe
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => navigate(-1)}
-            >
-              Back
-            </button>
-          </div>
-
           {/* Ingredients Section */}
-          <div className="related-section mb-4">
+          <div className="related-section mb-4 form-container">
             <div className="card-body">
-              <h4>Ingredients</h4>
+              <h4 className="text-center">Ingredients</h4>
               {ingredients.length === 0 ? (
                 <p className="related-empty">No ingredients yet.</p>
               ) : (
@@ -255,6 +232,29 @@ export default function RecipeView() {
                 }}
               />
             </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="view-actions mt-4">
+            <button 
+              className="btn btn-success" 
+              disabled={!canBake}
+              onClick={handleBake}
+            >
+              Bake "{recipeTitle}"
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={handleDelete}
+            >
+              Delete Recipe
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => navigate(-1)}
+            >
+              Back to Recipes
+            </button>
           </div>
         </div>
       </div>
