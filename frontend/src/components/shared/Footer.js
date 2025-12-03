@@ -9,7 +9,7 @@ export default function Footer() {
         <Link to="/recipes">Recipes</Link>
         <Link to="/baked_goods">Baked Goods</Link>
       </nav>
-      <small>© 2025 created by jkfaris94.</small>
+      <small>© 2025 created by <a href="https://github.com/jkfaris94" target="_blank" rel="noopener noreferrer">jkfaris94</a>.</small>
     </footer>
   );
 }

@@ -480,9 +480,9 @@ header.site-header .navbar-brand:focus {
 
 /* ================= Footer ================= */
 footer.site-footer {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 30%, var(--accent-color) 60%, var(--primary-light) 100%);
   color: white;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-md);
   text-align: center;
   margin-top: var(--spacing-3xl);
   border-top: 1px solid var(--border-color);
