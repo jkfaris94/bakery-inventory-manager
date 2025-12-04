@@ -78,26 +78,34 @@ export default function RecipeView() {
 
   // Remove ingredient from recipe
   const handleRemove = (ingredientId) => {
-  const abortController = new AbortController();
+    const ingredient = ingredients.find((i) => i.ingredient_id === ingredientId);
+    const ingredientName = ingredient?.name || "this ingredient";
+    
+    if (!window.confirm(`Are you sure you want to remove ${ingredientName} from this recipe?`)) {
+      return;
+    }
 
-  fetch(`${API_BASE}/recipes/${id}/ingredients/${ingredientId}`, {
-    method: "DELETE",
-    signal: abortController.signal,
-  })
-    .then(() => {
-      setIngredients((prev) =>
-        prev.filter((i) => i.ingredient_id !== ingredientId)
-      );
+    const abortController = new AbortController();
+
+    fetch(`${API_BASE}/recipes/${id}/ingredients/${ingredientId}`, {
+      method: "DELETE",
+      signal: abortController.signal,
     })
-    .catch((err) => {
-      if (err.name !== "AbortError") {
-        console.error(err);
-        toast.error("Failed to remove ingredient.");
-      }
-    });
+      .then(() => {
+        setIngredients((prev) =>
+          prev.filter((i) => i.ingredient_id !== ingredientId)
+        );
+        toast.success(`${ingredientName} removed from recipe`);
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          toast.error("Failed to remove ingredient.");
+        }
+      });
 
-  return () => abortController.abort();
-};
+    return () => abortController.abort();
+  };
 
   //Disable button if we can't bake
   const canBake = ingredients.every(

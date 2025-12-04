@@ -1256,6 +1256,19 @@ textarea.form-control {
   flex: 1;
 }
 
+/* Stack ingredients sections on mobile */
+@media (max-width: 768px) {
+  .ingredients-container {
+    flex-direction: column;
+  }
+  
+  .ingredients-list-section,
+  .add-ingredients-section {
+    flex: none;
+    width: 100%;
+  }
+}
+
 /* Inner wrapper for ingredients list (beige background) */
 .ingredients-inner-wrapper {
   background-color: var(--bg-secondary);
@@ -1309,6 +1322,27 @@ textarea.form-control {
   font-weight: var(--fw-medium);
   color: var(--text-primary);
   font-size: var(--fs-body);
+}
+
+/* Center remove button on mobile */
+@media (max-width: 768px) {
+  .ingredients-inner-wrapper .related-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
+  
+  .ingredients-inner-wrapper .related-item > .flex-grow-1 {
+    width: 100%;
+  }
+  
+  .ingredients-inner-wrapper .related-item .btn {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: var(--spacing-xs);
+    align-self: center;
+    text-align: center;
+  }
 }
 
 /* Image card styling */
