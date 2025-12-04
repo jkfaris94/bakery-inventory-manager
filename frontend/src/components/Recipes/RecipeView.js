@@ -183,54 +183,59 @@ export default function RecipeView() {
             )}
           </div>
 
-          {/* Ingredients Section */}
-          <div className="related-section mb-4">
-            <div className="card-body">
-              <h4 className="text-center">Ingredients</h4>
-              {ingredients.length === 0 ? (
-                <p className="related-empty">No ingredients yet.</p>
-              ) : (
-                <ul className="list-group mb-0">
-                  {ingredients.map((ing) => (
-                    <li
-                      key={ing.ingredient_id}
-                      className="list-group-item related-item"
-                    >
-                      <div className="flex-grow-1">
-                        <span className="related-item-name fw-bold">{ing.name}</span>
-                        <small className="text-muted ms-2">
-                          {ing.quantity_needed} {ing.unit}
-                          {ing.quantity_available !== undefined && (
-                            <span className={`ingredient-availability ${ing.quantity_available >= ing.quantity_needed ? 'ingredient-available' : 'ingredient-unavailable'}`}>
-                              (Available: {ing.quantity_available})
-                            </span>
-                          )}
-                        </small>
-                      </div>
-                      <button
-                        className="btn btn-outline-danger btn-sm ms-3"
-                        onClick={() => handleRemove(ing.ingredient_id)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+          {/* Ingredients and Add Ingredient Form - Side by Side */}
+          <div className="ingredients-container mb-4">
+            {/* Ingredients Section */}
+            <div className="related-section ingredients-list-section">
+              <div className="card-body">
+                <div className="ingredients-inner-wrapper">
+                  <h4 className="text-center">Ingredients</h4>
+                  {ingredients.length === 0 ? (
+                    <p className="related-empty">No ingredients yet.</p>
+                  ) : (
+                    <ul className="list-group mb-0">
+                      {ingredients.map((ing) => (
+                        <li
+                          key={ing.ingredient_id}
+                          className="list-group-item related-item"
+                        >
+                          <div className="flex-grow-1">
+                            <span className="related-item-name fw-bold">{ing.name}</span>
+                            <small className="text-muted ms-2">
+                              {ing.quantity_needed} {ing.unit}
+                              {ing.quantity_available !== undefined && (
+                                <span className={`ingredient-availability ${ing.quantity_available >= ing.quantity_needed ? 'ingredient-available' : 'ingredient-unavailable'}`}>
+                                  (Available: {ing.quantity_available})
+                                </span>
+                              )}
+                            </small>
+                          </div>
+                          <button
+                            className="btn btn-outline-danger btn-sm ms-3"
+                            onClick={() => handleRemove(ing.ingredient_id)}
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Add Ingredient Form */}
-          <div className="related-section">
-            <div className="card-body">
-              <AddRecipeIngredientForm
-                recipeId={id}
-                onAdd={() => {
-                  fetch(`${API_BASE}/recipes/${id}/ingredients`)
-                    .then((res) => res.json())
-                    .then(setIngredients);
-                }}
-              />
+            {/* Add Ingredient Form */}
+            <div className="related-section add-ingredients-section">
+              <div className="card-body">
+                <AddRecipeIngredientForm
+                  recipeId={id}
+                  onAdd={() => {
+                    fetch(`${API_BASE}/recipes/${id}/ingredients`)
+                      .then((res) => res.json())
+                      .then(setIngredients);
+                  }}
+                />
+              </div>
             </div>
           </div>
 
