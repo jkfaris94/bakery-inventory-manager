@@ -208,15 +208,19 @@ export default function RecipeView() {
                           className="list-group-item related-item"
                         >
                           <div className="flex-grow-1">
-                            <span className="related-item-name fw-bold">{ing.name}</span>
-                            <small className="text-muted ms-2">
-                              {ing.quantity_needed} {ing.unit}
-                              {ing.quantity_available !== undefined && (
+                            <div>
+                              <span className="related-item-name fw-bold">{ing.name}</span>
+                              <small className="text-muted ms-2">
+                                {ing.quantity_needed} {ing.unit}
+                              </small>
+                            </div>
+                            {ing.quantity_available !== undefined && (
+                              <div className="mt-1 mb-2">
                                 <span className={`ingredient-availability ${ing.quantity_available >= ing.quantity_needed ? 'ingredient-available' : 'ingredient-unavailable'}`}>
                                   (Available: {ing.quantity_available})
                                 </span>
-                              )}
-                            </small>
+                              </div>
+                            )}
                           </div>
                           <button
                             className="btn btn-outline-danger btn-sm ms-3"
