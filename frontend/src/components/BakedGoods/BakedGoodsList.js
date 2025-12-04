@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import BakedGoodEditForm from "./BakedGoodEditForm";
+import CustomSelect from "../shared/CustomSelect";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
 
@@ -157,6 +158,12 @@ export default function BakedGoodsList() {
   return () => abortController.abort(); 
 };
 
+  // Convert recipes to CustomSelect options format
+  const recipeOptions = recipes.map((r) => ({
+    value: String(r.id),
+    label: r.title,
+  }));
+
   return (
     <div className="container py-4">
       <h2 className="text-center mb-4">Baked Goods</h2>
@@ -165,18 +172,13 @@ export default function BakedGoodsList() {
       <div className="d-flex justify-content-center mb-4">
         <div className="form-container">
           <div className="input-group">
-            <select
-              className="form-select"
+            <CustomSelect
+              name="recipeSelect"
               value={selectedRecipeId}
               onChange={(e) => setSelectedRecipeId(e.target.value)}
-            >
-              <option value="">-- Select Recipe --</option>
-              {recipes.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.title}
-                </option>
-              ))}
-            </select>
+              options={recipeOptions}
+              placeholder="-- Select Recipe --"
+            />
             <button
               className="btn btn-success"
               onClick={handleBakeRecipe}

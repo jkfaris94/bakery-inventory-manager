@@ -1,4 +1,5 @@
 import React from "react";
+import CustomSelect from "../shared/CustomSelect";
 
 export default function IngredientForm({
   formData = { name: "", quantity: "", unit: "" },
@@ -8,6 +9,36 @@ export default function IngredientForm({
   submitLabel = "Create", 
 }) {
   const { name, quantity, unit } = formData;
+
+  const unitOptions = [
+    {
+      label: "Weight",
+      options: [
+        { value: "g", label: "g" },
+        { value: "kg", label: "kg" },
+        { value: "lb", label: "lb" },
+        { value: "oz", label: "oz" },
+      ],
+    },
+    {
+      label: "Volume",
+      options: [
+        { value: "ml", label: "ml" },
+        { value: "L", label: "L" },
+        { value: "cup", label: "cup" },
+        { value: "tbsp", label: "tbsp" },
+        { value: "tsp", label: "tsp" },
+        { value: "fl oz", label: "fl oz" },
+      ],
+    },
+    {
+      label: "Count",
+      options: [
+        { value: "piece", label: "piece" },
+        { value: "each", label: "each" },
+      ],
+    },
+  ];
 
   return (
     <form onSubmit={onSubmit} className="row g-3">
@@ -45,34 +76,16 @@ export default function IngredientForm({
         <label htmlFor="unit" className="form-label small">
           Unit
         </label>
-        <select
+        <CustomSelect
           id="unit"
           name="unit"
           value={unit}
           onChange={onChange}
-          className="form-control form-control-sm"
+          options={unitOptions}
+          placeholder="Select unit"
           required
-        >
-          <option value="">Select unit</option>
-          <optgroup label="Weight">
-            <option value="g">g</option>
-            <option value="kg">kg</option>
-            <option value="lb">lb</option>
-            <option value="oz">oz</option>
-          </optgroup>
-          <optgroup label="Volume">
-            <option value="ml">ml</option>
-            <option value="L">L</option>
-            <option value="cup">cup</option>
-            <option value="tbsp">tbsp</option>
-            <option value="tsp">tsp</option>
-            <option value="fl oz">fl oz</option>
-          </optgroup>
-          <optgroup label="Count">
-            <option value="piece">piece</option>
-            <option value="each">each</option>
-          </optgroup>
-        </select>
+          className="form-control-sm"
+        />
       </div>
 
       <div className="col-12 text-end">

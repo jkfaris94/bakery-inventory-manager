@@ -853,6 +853,150 @@ form.row {
   box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.15);
 }
 
+/* ================= Custom Select Dropdown ================= */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-button {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--fs-body);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.custom-select-button:hover:not(.is-disabled) {
+  border-color: var(--primary-light);
+}
+
+.custom-select-button:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.15);
+}
+
+.custom-select-button.is-open {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.15);
+}
+
+.custom-select-button.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--bg-secondary);
+}
+
+.custom-select-button.has-value .custom-select-value {
+  color: var(--text-primary);
+}
+
+.custom-select-value {
+  flex: 1;
+  color: var(--text-muted);
+}
+
+.custom-select-arrow {
+  margin-left: var(--spacing-sm);
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast);
+  display: flex;
+  align-items: center;
+}
+
+.custom-select-button.is-open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  max-height: 20rem;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.custom-select-group {
+  padding: var(--spacing-xs) 0;
+}
+
+.custom-select-group-label {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.custom-select-option {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--fs-body);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color var(--transition-fast);
+  line-height: 1.6;
+}
+
+.custom-select-option:hover:not(.is-disabled),
+.custom-select-option.is-focused:not(.is-disabled) {
+  background-color: var(--bg-secondary);
+}
+
+.custom-select-option.is-selected {
+  background-color: rgba(139, 111, 71, 0.1);
+  font-weight: var(--fw-medium);
+}
+
+.custom-select-option.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-select-checkmark {
+  color: var(--primary-color);
+  font-weight: var(--fw-bold);
+  margin-left: var(--spacing-sm);
+}
+
+/* Small variant for form-control-sm compatibility */
+.custom-select-wrapper.form-control-sm .custom-select-button {
+  min-height: 2.25rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--fs-small);
+}
+
+.custom-select-wrapper.form-control-sm .custom-select-option {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--fs-small);
+}
+
 textarea.form-control {
   resize: vertical;
   min-height: 100px;
@@ -866,13 +1010,19 @@ textarea.form-control {
 }
 
 .input-group .form-select,
-.input-group .form-control {
+.input-group .form-control,
+.input-group .custom-select-button {
   border: none;
   box-shadow: none;
 }
 
 .input-group .form-select:focus,
-.input-group .form-control:focus {
+.input-group .form-control:focus,
+.input-group .custom-select-button:focus {
+  box-shadow: none;
+}
+
+.input-group .custom-select-button.is-open {
   box-shadow: none;
 }
 

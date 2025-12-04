@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import CustomSelect from "../shared/CustomSelect";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL || "";
 
@@ -71,6 +72,12 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
   return () => abortController.abort(); // Optional
 };
 
+  // Convert ingredients to CustomSelect options format
+  const ingredientOptions = ingredients.map((i) => ({
+    value: String(i.id),
+    label: `${i.name} (${i.unit})`,
+  }));
+
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit} className="row g-3">
@@ -80,20 +87,16 @@ export default function AddRecipeIngredientForm({ recipeId, onAdd }) {
             <label htmlFor="ingredientSelect" className="form-label small">
               Ingredient
             </label>
-            <select
+            <CustomSelect
               id="ingredientSelect"
-              className="form-select form-select-sm"
+              name="ingredientSelect"
               value={selectedId}
               onChange={(e) => setSelectedId(e.target.value)}
+              options={ingredientOptions}
+              placeholder="-- Select Ingredient --"
               required
-            >
-              <option value="">-- Select Ingredient --</option>
-              {ingredients.map((i) => (
-                <option key={i.id} value={i.id}>
-                  {i.name} ({i.unit})
-                </option>
-              ))}
-            </select>
+              className="form-control-sm"
+            />
           </div>
 
           <div className="col-12">
