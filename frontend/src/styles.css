@@ -920,15 +920,12 @@ form.row {
 }
 
 .custom-select-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  position: fixed;
   background-color: var(--bg-card);
   border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: 10000;
   max-height: 20rem;
   overflow-y: auto;
   margin-top: 2px;

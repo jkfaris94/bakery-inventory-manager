@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function CustomSelect({
   id,
@@ -13,8 +14,10 @@ export default function CustomSelect({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0, openUpward: false });
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
+  const dropdownContentRef = useRef(null);
 
   // Flatten options for easier navigation (includes optgroups)
   const flatOptions = [];
@@ -33,10 +36,58 @@ export default function CustomSelect({
   const selectedOption = flatOptions.find((opt) => opt.value === value);
   const displayValue = selectedOption ? selectedOption.label : placeholder;
 
+  // Calculate dropdown position when opened
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const updatePosition = () => {
+        if (buttonRef.current) {
+          const rect = buttonRef.current.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const viewportWidth = window.innerWidth;
+          const estimatedDropdownHeight = 300; // Approximate max height
+          
+          // Check if dropdown would overflow bottom of viewport
+          const spaceBelow = viewportHeight - rect.bottom;
+          const spaceAbove = rect.top;
+          const openUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
+          
+          // Calculate left position, ensuring it doesn't overflow right edge
+          let left = rect.left;
+          if (left + rect.width > viewportWidth) {
+            left = Math.max(0, viewportWidth - rect.width);
+          }
+          
+          // Use viewport coordinates for fixed positioning
+          setDropdownPosition({
+            top: openUpward ? undefined : rect.bottom + 4,
+            bottom: openUpward ? window.innerHeight - rect.top + 4 : undefined,
+            left: left,
+            width: rect.width,
+            openUpward: openUpward,
+          });
+        }
+      };
+
+      updatePosition();
+      window.addEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
+    }
+  }, [isOpen]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        dropdownContentRef.current &&
+        !dropdownContentRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
         setFocusedIndex(-1);
       }
@@ -51,14 +102,18 @@ export default function CustomSelect({
     };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use a small delay to avoid immediate closing
+      const timeoutId = setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 0);
       document.addEventListener("keydown", handleEscape);
-    }
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("keydown", handleEscape);
+      };
+    }
   }, [isOpen]);
 
   const handleKeyDown = (event) => {
@@ -156,9 +211,21 @@ export default function CustomSelect({
         </span>
       </button>
 
-      {isOpen && (
-        <div className="custom-select-dropdown">
-          {options.map((option, groupIndex) => {
+      {isOpen &&
+        createPortal(
+          <div
+            ref={dropdownContentRef}
+            className="custom-select-dropdown"
+            style={{
+              position: "fixed",
+              top: dropdownPosition.top !== undefined ? `${dropdownPosition.top}px` : undefined,
+              bottom: dropdownPosition.bottom !== undefined ? `${dropdownPosition.bottom}px` : undefined,
+              left: `${dropdownPosition.left}px`,
+              width: `${dropdownPosition.width}px`,
+              zIndex: 10000,
+            }}
+          >
+            {options.map((option, groupIndex) => {
             if (option.options) {
               // Render optgroup
               return (
@@ -218,8 +285,9 @@ export default function CustomSelect({
               );
             }
           })}
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
 
       {/* Hidden select for form submission */}
       <select
