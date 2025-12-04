@@ -830,6 +830,19 @@ form.row {
   cursor: pointer;
 }
 
+/* Make select dropdown options larger and more readable */
+.form-select option {
+  font-size: var(--fs-body);
+  padding: var(--spacing-sm);
+  line-height: 1.6;
+}
+
+/* Increase the select element size for better visibility */
+.form-select {
+  min-height: 2.5rem;
+  font-size: 1rem;
+}
+
 .form-select:hover {
   border-color: var(--primary-light);
 }

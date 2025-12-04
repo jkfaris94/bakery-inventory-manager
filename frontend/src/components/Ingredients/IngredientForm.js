@@ -45,15 +45,34 @@ export default function IngredientForm({
         <label htmlFor="unit" className="form-label small">
           Unit
         </label>
-        <input
+        <select
           id="unit"
           name="unit"
-          type="text"
           value={unit}
           onChange={onChange}
           className="form-control form-control-sm"
           required
-        />
+        >
+          <option value="">Select unit</option>
+          <optgroup label="Weight">
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+            <option value="lb">lb</option>
+            <option value="oz">oz</option>
+          </optgroup>
+          <optgroup label="Volume">
+            <option value="ml">ml</option>
+            <option value="L">L</option>
+            <option value="cup">cup</option>
+            <option value="tbsp">tbsp</option>
+            <option value="tsp">tsp</option>
+            <option value="fl oz">fl oz</option>
+          </optgroup>
+          <optgroup label="Count">
+            <option value="piece">piece</option>
+            <option value="each">each</option>
+          </optgroup>
+        </select>
       </div>
 
       <div className="col-12 text-end">
