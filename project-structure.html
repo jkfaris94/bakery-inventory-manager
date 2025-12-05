@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakery Inventory Manager - Project Structure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 25px 30px;
+            max-width: 1800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 24px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .structure {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .section {
+            flex: 1;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tree {
+            color: #2d3748;
+            line-height: 1.5;
+            font-size: 12px;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            padding: 2px 0;
+            transition: background-color 0.2s;
+        }
+
+        .tree-item:hover {
+            background-color: #f7fafc;
+            border-radius: 4px;
+        }
+
+        .tree-indent {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .tree-indent-2 {
+            width: 40px;
+        }
+
+        .tree-indent-3 {
+            width: 60px;
+        }
+
+        .tree-indent-4 {
+            width: 80px;
+        }
+
+        .tree-indent-5 {
+            width: 100px;
+        }
+
+        .tree-indent-6 {
+            width: 120px;
+        }
+
+        .icon {
+            display: inline-block;
+            width: 16px;
+            margin-right: 8px;
+            text-align: center;
+        }
+
+        .folder {
+            color: #f6ad55;
+        }
+
+        .file {
+            color: #4299e1;
+        }
+
+        .config {
+            color: #48bb78;
+        }
+
+        .code {
+            color: #ed64a6;
+        }
+
+        .data {
+            color: #9f7aea;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #718096;
+            font-size: 12px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 10px;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            .structure {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 1600px) {
+            .structure {
+                gap: 20px;
+            }
+            .tree {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍰 Bakery Inventory Manager</h1>
+            <p>Full-Stack Project Structure</p>
+        </div>
+
+        <div class="structure">
+            <div class="section">
+                <div class="section-title">
+                    <span>📁 Root</span>
+                </div>
+                <div class="tree">
+                    <div class="tree-item">
+                        <span class="icon folder">📁</span>bakery-inventory-manager/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">⚙️</span>.gitignore
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon data">📄</span>README.md
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">📦</span>package.json
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>⚙️ Backend</span>
+                </div>
+                <div class="tree">
+                    <div class="tree-item">
+                        <span class="icon folder">📁</span>backend/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">⚙️</span>.env.sample
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">⚙️</span>knexfile.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">📦</span>package.json
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon folder">📁</span>src/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>app.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>server.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>baked_goods/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>baked_goods.controller.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>baked_goods.router.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>db/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>connection.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>migrations/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>create_ingredients_table.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>create_recipes_table.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>create_baked_goods_table.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>create_recipe_ingredients_table.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>seeds/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>001_seed_ingredients.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>002_seed_recipes.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>003_seed_baked_goods.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>004_seed_recipe_ingredients.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>ingredients/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>ingredients.controller.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>ingredients.router.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>recipes/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>recipes.controller.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>recipes.router.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>recipe_ingredients.controller.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>recipe_ingredients.router.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>errors/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>errorHandler.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>methodNotAllowed.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>notFound.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon folder">📁</span>test/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>ingredients.test.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>recipes.test.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>jest.config.js
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span>⚛️ Frontend</span>
+                </div>
+                <div class="tree">
+                    <div class="tree-item">
+                        <span class="icon folder">📁</span>frontend/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">⚙️</span>.env.sample
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon config">📦</span>package.json
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon folder">📁</span>public/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon file">📄</span>index.html
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent"></span>
+                        <span class="icon folder">📁</span>src/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>App.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>index.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon code">📄</span>styles.css
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>components/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>BakedGoods/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>BakedGoodEditForm.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>BakedGoodsList.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>Ingredients/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>IngredientCreate.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>IngredientEdit.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>IngredientForm.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>IngredientsList.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>IngredientView.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>Recipes/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>AddRecipeIngredientForm.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>RecipeForm.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>RecipesCreate.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>RecipesList.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>RecipeView.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon folder">📁</span>shared/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>CustomSelect.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>Footer.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>Header.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>Home.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>Layout.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>NavBar.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-4"></span>
+                        <span class="icon code">📄</span>NotFound.js
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-2"></span>
+                        <span class="icon folder">📁</span>utils/
+                    </div>
+                    <div class="tree-item">
+                        <span class="tree-indent-3"></span>
+                        <span class="icon code">📄</span>backendHealth.js
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Bakery Inventory Manager • Full-Stack Application</p>
+            <p style="margin-top: 8px; font-size: 12px;">React • Express • PostgreSQL • Knex.js</p>
+        </div>
+    </div>
+</body>
+</html>
